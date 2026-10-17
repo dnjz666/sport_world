@@ -59,6 +59,8 @@ tools/                        忽略的本机官方工具／缓存
 
 执行前读 [AGENT.md](AGENT.md)、[设计](docs/superpowers/specs/2026-10-16-harmonyos-track-location-design.md)、[实施计划](docs/superpowers/plans/2026-10-16-harmonyos-track-location-plan.md)和 [M0 结果](docs/verification/m0-results.md)。用户已选择在本会话顺序执行，常规已授权步骤连续推进，实际外部条件再具体交接。
 
+后续开发在当前项目目录从 `main` 新建 `codex/` 开发分支，不再单独创建隔离工作树；具体规则见 [AGENT.md](AGENT.md)。
+
 任务 3–4 的模块与使用见 [桌面模块说明](desktop/README.md)，验证见[任务 3 报告](docs/verification/task3-desktop-foundation.md)及[任务 4 报告](docs/verification/task4-time-driven-replay.md)。在仓库根目录使用 Node 26.1.0 或更高版本：
 
 ```powershell
