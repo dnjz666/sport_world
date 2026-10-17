@@ -1,0 +1,15 @@
+# Local vendor tools and device-specific verification data.
+/tools/
+/.superpowers/
+/.hvigor/
+/docs/verification/m0-report.json
+/prototype/reader/.hvigor/
+/prototype/reader/.idea/
+/prototype/reader/oh_modules/
+/prototype/reader/build/
+/prototype/reader/entry/build/
+/prototype/reader/local.properties
+/prototype/reader/build-profile.json5
+/prototype/reader/*.p12
+/prototype/reader/*.p7b
+/prototype/reader/*.cer

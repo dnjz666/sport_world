@@ -1,0 +1,34 @@
+{
+  "recordedAt": "2026-10-16T13:33:32+08:00",
+  "scope": "Windows host discovery only; no phone command or location change executed",
+  "commands": [
+    { "name": "hdc", "foundOnPath": false, "path": null },
+    { "name": "adb", "foundOnPath": false, "path": null },
+    { "name": "node", "foundOnPath": true, "path": "C:\\nvm4w\\nodejs\\node.exe" },
+    { "name": "java", "foundOnPath": true, "path": "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath\\java.exe" }
+  ],
+  "sdkRootChecks": [
+    { "path": "C:\\Program Files\\Huawei", "exists": false },
+    { "path": "C:\\Program Files (x86)\\Huawei", "exists": false },
+    { "path": "C:\\Users\\dnjz\\AppData\\Local\\Huawei", "exists": false }
+  ],
+  "sdkEnvironmentVariables": [],
+  "deviceDiscovery": {
+    "method": "Get-CimInstance Win32_PnPEntity; Name matches Huawei|HDC|Harmony|HiSuite|Mate OR DeviceID matches VID_12D1",
+    "sandboxAttempt": "CIM access denied; retried with approved host access",
+    "hostQuerySucceeded": true,
+    "matchingEntityCount": 6,
+    "summary": "All six matches were HUAWEI AM08 audio/Bluetooth entities; no phone entity matched. This query does not establish HDC authorization.",
+    "hdcListTargetsExecuted": false
+  },
+  "userReportedBlocker": "当前身边没有USB数据线",
+  "officialToolPage": {
+    "url": "https://developer.huawei.com/consumer/cn/download/command-line-tools-for-hmos",
+    "httpStatus": 200,
+    "pageBytes": 1294,
+    "packageUrlVerified": false,
+    "checksumVerified": false,
+    "binaryDownloaded": false,
+    "binaryExecuted": false
+  }
+}

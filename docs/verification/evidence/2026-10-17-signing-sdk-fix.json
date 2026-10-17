@@ -1,0 +1,74 @@
+{
+  "recordedAt": "2026-10-17T17:16:37.336379+08:00",
+  "status": "ide_sdk_build_passed_unsigned",
+  "symptom": "Automatic signing reports API version 24 SDK not found",
+  "rootCause": "Project explicitly pinned API 24 compiler; installed IDE bundles API 26 SDK",
+  "ideVersion": "26.0.0.851",
+  "ideSdkApi": 26,
+  "ideSdkVersion": "26.0.0.105",
+  "hvigorVersion": "6.26.8",
+  "fix": "Removed compileSdkVersion only from local and template build-profile; use the build environment bundled SDK",
+  "targetSdkVersion": "6.1.1(24)",
+  "compatibleSdkVersion": "5.0.0(12)",
+  "buildExitCode": 0,
+  "buildLog": ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/reader-ide26-sdk-build.txt",
+  "buildExecutable": "D:\\code\\devecostudio-windows-26.0.0.851\\DevEco Studio\\tools\\node\\node.exe",
+  "buildScript": "D:\\code\\devecostudio-windows-26.0.0.851\\DevEco Studio\\tools\\hvigor\\bin\\hvigorw.js",
+  "buildArgs": [
+    "--mode",
+    "module",
+    "-p",
+    "product=default",
+    "-p",
+    "module=entry@default",
+    "-p",
+    "buildMode=debug",
+    "assembleHap",
+    "--no-daemon"
+  ],
+  "artifact": {
+    "path": "prototype/reader/entry/build/default/outputs/default/entry-default-unsigned.hap",
+    "bytes": 32384,
+    "sha256": "0023d9ec536170d46c36fa6305af57a05145da519f15ad97b3e6e79dfb71fdd6"
+  },
+  "manifest": {
+    "bundleName": "com.example.m0locationreader",
+    "compileSdkVersion": "26.0.0.105",
+    "targetAPIVersion": 60101024,
+    "minAPIVersion": 50000012,
+    "permissions": [
+      "ohos.permission.APPROXIMATELY_LOCATION",
+      "ohos.permission.LOCATION"
+    ]
+  },
+  "inputSha256": {
+    "prototype/reader/AppScope/app.json5": "7ffe139fbf1bc4530d7a22b68c3be98013f335e26319ffa3030e6cb5b752da56",
+    "prototype/reader/AppScope/resources/base/element/string.json": "4d0751050d448485b7670237a849e7c1e5df6b2094a3e46ee2cdd55f26a6c655",
+    "prototype/reader/AppScope/resources/base/media/app_icon.svg": "4795f9dc9fea57adfafc3f5efd8ccfd15f23ea49a2ee1cdbef7635d8c2a5713e",
+    "prototype/reader/build-profile.template.json5": "8191b80bf51b8b527cde49f0a4085da471701fbe9bf17a332bc1b1db8bb905d0",
+    "prototype/reader/build.ps1": "0310254ae1b308825c51d3a234a20cf918f611daf85d930826728aa0a37ac0d6",
+    "prototype/reader/entry/build-profile.json5": "ab6a89261d46045602e8387d49dd8a9bbca8390247c95116eb5ba84cdac7601b",
+    "prototype/reader/entry/hvigorfile.ts": "ac6e20686b93c3aedcb0a9d99c76f87f4552c3a6a94d9f0d7ffe5103dea89864",
+    "prototype/reader/entry/oh-package.json5": "0dda6f294aa229068ae03fd3094dc85c87de39679e6b6376d54796e4c908d351",
+    "prototype/reader/entry/src/main/ets/entryability/EntryAbility.ets": "94964b1ccd8c05f8bbb09c0b9c188d6b99ac81b7a54d32c4bb12706d4fc57c6d",
+    "prototype/reader/entry/src/main/ets/location/LocationReader.ets": "548effc0a2bf9e604c62ed7cabd46bdef4a4884d38cf22fec2fc0788ade16939",
+    "prototype/reader/entry/src/main/ets/pages/Index.ets": "b50bf84ecebeeda0ccee3917eeda4c6b66d269ffc1ef67a147d67966c7eeab49",
+    "prototype/reader/entry/src/main/module.json5": "317eb9c1e04f838d76b52502fa2078d80ddc5a1ee72ac878be4f3babdd515f7a",
+    "prototype/reader/entry/src/main/resources/base/element/color.json": "64b7b20d780b75ec9d8d684558dd22d2151f584f157719c6be6912243add0df3",
+    "prototype/reader/entry/src/main/resources/base/element/string.json": "d6906bb8c85472234868180a9ce8b4edc7c1f78cb6da5ec5e178bf94c21c233c",
+    "prototype/reader/entry/src/main/resources/base/profile/main_pages.json": "4ca3fb089a34d7f463b3af626b3d472b4ae5b2021c64606d272c926535fe0814",
+    "prototype/reader/hvigor/hvigor-config.json5": "b2bae667ad39ed2d3f2eb9a4844a9ca6f17b681eb49848df9038804837162936",
+    "prototype/reader/hvigorfile.ts": "1065d54a286b68cdeab133b484547bacf1313724babf19836051fd680b3db2b8",
+    "prototype/reader/oh-package.json5": "f08fb9d1728492e8b31adc7e13f120cdf5ba5d59697cdb36ffc8033aef5cb485"
+  },
+  "warnings": [
+    "Three geoLocationManager system-capability portability warnings; runtime remains unverified",
+    "No signingConfig configured; unsigned output"
+  ],
+  "automaticSigningRetryVerified": false,
+  "signingConfigured": false,
+  "installedBySession": false,
+  "realLocationSamples": 0,
+  "phoneLocationChanged": false,
+  "officialReference": "https://developer.huawei.com/consumer/cn/doc/doccenter-deveco-studio/ide-hmos-hvigor-build-profile-app"
+}

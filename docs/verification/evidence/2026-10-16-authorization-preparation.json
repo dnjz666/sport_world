@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-16",
+  "accountRealNameVerified": "user_reported",
+  "materialsStatus": "ready_to_submit",
+  "submittedToHuawei": false,
+  "permissionApplicationSubmitted": false,
+  "agcAppCreated": false,
+  "profileIssued": false,
+  "mockLocationGranted": false,
+  "browserAutomationStatus": "reset followed by two timeouts",
+  "publicListContentVerified": false,
+  "draftPath": "docs/verification/huawei-support/request.md",
+  "attachmentPath": "docs/verification/huawei-support/huawei-location-capability-consultation-2026-10-16.zip",
+  "attachmentSha256": "8482d5ca1e76c7ed265cb9ecbdc3b799146f1ca445b253c443dd1b46094d4fc4",
+  "attachmentMembers": [
+    "request.md",
+    "device-summary.json",
+    "permission-definition.json",
+    "diagnostic-summary.json",
+    "source-references.md",
+    "SHA256SUMS.txt"
+  ],
+  "privateDeviceIdentifierIncluded": false
+}

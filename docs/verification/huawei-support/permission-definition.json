@@ -1,0 +1,10 @@
+{
+  "permissionName": "ohos.permission.MOCK_LOCATION",
+  "grantMode": "SYSTEM_GRANT",
+  "availableLevel": "SYSTEM_BASIC",
+  "availableType": "SYSTEM",
+  "provisionEnable": true,
+  "distributedSceneEnable": false,
+  "isKernelEffect": false,
+  "hasValue": false
+}

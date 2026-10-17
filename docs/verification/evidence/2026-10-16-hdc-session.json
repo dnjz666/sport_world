@@ -1,0 +1,79 @@
+{
+  "observedAt": "2026-10-16T19:11:12+08:00",
+  "archive": {
+    "path": "D:\\code\\commandline-tools-windows-x64-6.1.1.418.zip",
+    "bytes": 2600751070,
+    "sha256": "13338f9d313db76831a51be6ccbe4ba8c3340ea311431b3ca7fa4328d038c62f",
+    "officialArchiveDigestCompared": false,
+    "entries": 102224,
+    "entriesExceedingCommon260LimitAtOriginalDestination": 26,
+    "longestRelativePathChars": 218
+  },
+  "extraction": {
+    "method": "Python zipfile; selected members only; CRC verified on read",
+    "directory": "D:\\code\\sport_world\\tools\\hdc",
+    "members": [
+      "hdc.exe",
+      "libusb_shared.dll",
+      "oh-uni-package.json",
+      "NOTICE.txt"
+    ],
+    "authenticode": {
+      "hdc.exe": {
+        "status": "Valid",
+        "publisher": "Huawei Technologies Co., Ltd."
+      },
+      "libusb_shared.dll": {
+        "status": "Valid",
+        "publisher": "Huawei Technologies Co., Ltd."
+      }
+    },
+    "manifest": "tools/hdc/extraction-manifest.json"
+  },
+  "tool": {
+    "path": "D:\\code\\sport_world\\tools\\hdc\\hdc.exe",
+    "hdcVersion": "3.2.0d",
+    "toolchainsVersion": "6.1.1.125",
+    "sdkApiVersion": 24,
+    "server": "127.0.0.1:8710"
+  },
+  "connection": {
+    "transport": "USB",
+    "status": "Connected",
+    "targetIdRedacted": "63Q0…5973",
+    "rawTargetEvidenceStoredPrivately": true,
+    "otherTransportsNeverSelected": true
+  },
+  "device": {
+    "model": "SGT-AL50",
+    "softwareVersion": "SGT-AL50 7.0.0.109(SP6C00E105R3P3)",
+    "baseOsFullname": "OpenHarmony-7.0.0.105",
+    "apiVersion": 26,
+    "shellUid": 2000,
+    "shellContext": "u:r:sh:s0"
+  },
+  "targetApp": {
+    "bundleName": "com.zjwh.hm_wh_physicalfitness",
+    "versionName": "7.3.92",
+    "versionCode": 1000114,
+    "entryModule": "entry",
+    "identification": "User opened Sport World; foreground mission record matched bundle; bm dump -n retrieved metadata"
+  },
+  "candidateReview": {
+    "publicGeoLocationManagerDeclarationsContainMockApis": false,
+    "sdkDeclarationApiVersion": 24,
+    "matchesDeviceApiVersion": false,
+    "hdcVerboseHelpListsLocationMockCommand": false,
+    "locationLocatorHelp": "Service header only; no location write entry documented",
+    "locationGnssHelp": "Only -h advertised",
+    "systemBinNameCandidates": [],
+    "noWriteEntryProven": true,
+    "absenceIsNotProofOfUnsupported": true
+  },
+  "locationWritesExecuted": false,
+  "independentReaderBuilt": false,
+  "g0": false,
+  "g1": false,
+  "g2": false,
+  "verifiedStandalone": false
+}

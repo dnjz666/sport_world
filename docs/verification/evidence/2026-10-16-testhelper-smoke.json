@@ -1,0 +1,16 @@
+{
+  "capturedAt": "2026-10-16T20:04:28.3292142+08:00",
+  "scope": "testhelper enable followed immediately by disable; no GPX or position supplied",
+  "version": [
+    "1.0.1"
+  ],
+  "enable": [
+    "Enable location mock successfully."
+  ],
+  "disable": [
+    "Disable location mock successfully."
+  ],
+  "coordinatesWritten": false,
+  "locationReadVerified": false,
+  "targetAppReadVerified": false
+}

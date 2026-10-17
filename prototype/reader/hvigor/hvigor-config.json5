@@ -1,0 +1,6 @@
+{
+  "modelVersion": "6.0.0",
+  "dependencies": {},
+  "properties": { "hvigor.dependency.useNpm": true },
+  "execution": { "daemon": false }
+}

@@ -1,0 +1,6 @@
+{
+  "string": [
+    { "name": "entry_desc", "value": "前台独立读取系统定位用于真机验证" },
+    { "name": "location_reason", "value": "用于读取当前坐标并验证定位测试结果" }
+  ]
+}

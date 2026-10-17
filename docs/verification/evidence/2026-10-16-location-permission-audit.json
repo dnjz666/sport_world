@@ -1,0 +1,89 @@
+{
+  "recordedAt": "2026-10-16T19:35:10+08:00",
+  "status": "blocked",
+  "devicePermissionDefinition": {
+    "permissionName": "ohos.permission.MOCK_LOCATION",
+    "grantMode": "SYSTEM_GRANT",
+    "availableLevel": "SYSTEM_BASIC",
+    "availableType": "SYSTEM",
+    "provisionEnable": true,
+    "distributedSceneEnable": false,
+    "isKernelEffect": false,
+    "hasValue": false
+  },
+  "hdcdToken": {
+    "processName": "hdcd",
+    "uid": 2000,
+    "apl": 1,
+    "grantedPermissionNames": [
+      "ohos.permission.DUMP",
+      "ohos.permission.GET_BUNDLE_INFO_PRIVILEGED",
+      "ohos.permission.INSTALL_BUNDLE",
+      "ohos.permission.REMOVE_CACHE_FILES",
+      "ohos.permission.CLEAN_BACKGROUND_PROCESSES",
+      "ohos.permission.START_ABILITIES_FROM_BACKGROUND",
+      "ohos.permission.CLEAN_APPLICATION_DATA",
+      "ohos.permission.START_SYSTEM_DIALOG",
+      "ohos.permission.GET_RUNNING_INFO",
+      "ohos.permission.CONTROL_SVC_CMD",
+      "ohos.permission.SET_WIFI_INFO",
+      "ohos.permission.MANAGE_WIFI_CONNECTION",
+      "ohos.permission.HIVIEW_TRACE_MANAGE",
+      "ohos.permission.INSTALL_PLUGIN_BUNDLE",
+      "ohos.permission.UNINSTALL_PLUGIN_BUNDLE",
+      "ohos.permission.NETWORK_SIMULATE",
+      "ohos.permission.GET_WIFI_INFO",
+      "ohos.permission.SET_WIFI_CONFIG",
+      "ohos.permission.GET_WIFI_INFO_INTERNAL",
+      "ohos.permission.MANAGE_ENTERPRISE_WIFI_CONNECTION",
+      "ohos.permission.INSTALL_ALLOW_DOWNGRADE",
+      "ohos.permission.HDC_REPORT_INFO"
+    ],
+    "mockLocationPermissionListed": false
+  },
+  "shellTokenNameQuery": "No separate native token named shell was found; this is not a self-permission API result.",
+  "permissionProbe": {
+    "source": "prototype/permission-probe/check.c",
+    "sourceSha256": "74fe380b15b2395187ffa295a268b104a9165810d03677350d861c5e6917d090",
+    "buildStatus": "built",
+    "architecture": "AArch64 ELF PIE",
+    "bytes": 14272,
+    "binarySha256": "2a25e91a3e9dc25861be9b1e2a35717954d19f913c7f075db404f894b1b82be0",
+    "remoteSha256Verified": true,
+    "executionStatus": "execution_denied",
+    "selfPermissionResult": null,
+    "runtimeOutput": "/bin/sh: /data/local/tmp/sportworld-permission-2a25e91a3e9d/probe-bin/permission-check: Permission denied",
+    "fileMode": "-rwx------",
+    "owner": "shell:shell",
+    "fileContext": "u:object_r:data_local_tmp:s0",
+    "specificExecutionDenialMechanism": "unconfirmed",
+    "cleanupEvidence": "docs/verification/evidence/2026-10-16-permission-probe-cleanup.json"
+  },
+  "securityModeQuery": "getenforce failed with Permission denied; actual mode not established by this query.",
+  "userReportedMockLocationDeveloperOptionPresent": false,
+  "upstreamSources": [
+    {
+      "url": "https://github.com/openharmony/base_location/blob/4c5dca7cf9faeae4da0ba833945770600129e2dc/services/location_locator/locator/source/locator_ability.cpp",
+      "finding": "EnableLocationMock / SetMockedLocations / DisableLocationMock; identity and mock permission checks; USB/developer mode condition in upstream enable path. Not a binary match to this commercial build."
+    },
+    {
+      "url": "https://github.com/openharmony/base_location/blob/4c5dca7cf9faeae4da0ba833945770600129e2dc/frameworks/location_common/common/source/permission_manager.cpp",
+      "finding": "CheckMockLocationPermission delegates to permission verification; system check distinguishes native, CLI-tool, shell and HAP callers."
+    },
+    {
+      "url": "https://developer.huawei.com/consumer/cn/doc/doccenter-deveco-studio/ide-signing-auto",
+      "finding": "Generic ACL and signing flow exists; no proof this project can obtain MOCK_LOCATION or system application identity."
+    },
+    {
+      "url": "https://developer.huawei.com/consumer/cn/doc/doccenter-capabilities/restricted-permissions",
+      "finding": "Resolved exact link from official signing guide; page fetch unsuccessful, no current allowlist conclusion."
+    }
+  ],
+  "locationWriteApiInvoked": false,
+  "independentLocationSamplesCollected": false,
+  "sportWorldLocationOverrideVerified": false,
+  "normalAppPathVerified": false,
+  "usbWritePathVerified": false,
+  "verifiedStandalone": false,
+  "nextCondition": "Huawei-supported commercial-device debug write entry, or an obtainable identity/signing/profile route that authorizes the mock location permission and relevant system API identity checks."
+}

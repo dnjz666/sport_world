@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-10-16T18:16:38+08:00",
+  "method": "Approved read-only Windows CIM query of present Plug and Play entities",
+  "phone": {
+    "name": "HUAWEI Mate 80 Pro",
+    "status": "OK",
+    "pnpClass": "WPD",
+    "usbVendor": "12D1",
+    "usbProduct": "1101",
+    "serialOmitted": true
+  },
+  "interpretation": "Windows recognizes the phone over USB as a portable device; this is not proof of HDC connectivity or authorization.",
+  "hdcFoundOnPath": false,
+  "hdcListTargetsExecuted": false,
+  "userReportedDebuggingState": "还没开启或找不到 USB 调试",
+  "locationCommandsExecuted": false
+}

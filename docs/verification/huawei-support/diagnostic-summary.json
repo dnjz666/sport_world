@@ -1,0 +1,18 @@
+{
+  "hdcdProcessUid": 2000,
+  "hdcdMockLocationPermissionListed": false,
+  "developerOptionMockSelectorReportedPresent": false,
+  "probe": {
+    "buildStatus": "built",
+    "executionStatus": "execution_denied",
+    "selfPermissionResult": null,
+    "fileMode": "-rwx------",
+    "owner": "shell:shell",
+    "specificDenialMechanism": "unconfirmed",
+    "remoteSha256Verified": true,
+    "temporaryFilesCleaned": true
+  },
+  "locationWriteApiInvoked": false,
+  "independentLocationSamplesCollected": false,
+  "sportWorldLocationOverrideVerified": false
+}

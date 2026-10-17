@@ -1,0 +1,15 @@
+{
+  "observedAt": "2026-10-16T18:21:51+08:00",
+  "method": "Approved read-only Windows CIM query of present Plug and Play entities; device serials omitted",
+  "interfaces": [
+    { "name": "HUAWEI Mate 80 Pro", "status": "OK", "pnpClass": "WPD", "usbHardware": "VID_12D1&PID_1101&MI_01" },
+    { "name": "HDC Interface", "status": "OK", "pnpClass": "USBDevice", "usbHardware": "VID_12D1&PID_1101&MI_00" },
+    { "name": "USB Composite Device", "status": "OK", "pnpClass": "USB", "usbHardware": "VID_12D1&PID_1101" }
+  ],
+  "userReportedUsbDebuggingEnabled": true,
+  "hdcFoundOnPath": false,
+  "hdcListTargetsExecuted": false,
+  "debugAuthorizationVerified": false,
+  "locationCommandsExecuted": false,
+  "toolAcquisition": "Official Huawei download page located. Browser automation could not initialize (kernel asset path error). User asked to download the Windows Command Line Tools package locally; binary version and integrity remain unverified."
+}

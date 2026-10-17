@@ -1,0 +1,277 @@
+{
+  "recordedAt": "2026-10-17T17:50:54.079319+08:00",
+  "status": "usb_m0_passed_standalone_unverified",
+  "device": {
+    "model": "SGT-AL50",
+    "systemBuild": "SGT-AL50 7.0.0.109(SP6C00E105R3P3)",
+    "api": 26,
+    "targetIdRedacted": true
+  },
+  "targetApp": {
+    "bundleName": "com.zjwh.hm_wh_physicalfitness",
+    "version": "7.3.92",
+    "locationCompatibilityTested": false,
+    "exerciseRecordStarted": false
+  },
+  "reader": {
+    "bundleName": "com.example.m0locationreader",
+    "ideVersion": "26.0.0.851",
+    "sdkVersion": "26.0.0.105",
+    "hvigorVersion": "6.26.8",
+    "buildExitCode": 0,
+    "buildArgs": [
+      "--mode",
+      "module",
+      "-p",
+      "product=default",
+      "-p",
+      "module=entry@default",
+      "-p",
+      "buildMode=debug",
+      "assembleHap",
+      "--no-daemon"
+    ],
+    "buildExecutable": "D:\\code\\devecostudio-windows-26.0.0.851\\DevEco Studio\\tools\\node\\node.exe",
+    "buildScript": "D:\\code\\devecostudio-windows-26.0.0.851\\DevEco Studio\\tools\\hvigor\\bin\\hvigorw.js",
+    "signingMethod": "user configured DevEco automatic debug signing; matching normal debug Profile verified; local default product bound to default signingConfig",
+    "profileType": "debug",
+    "apl": "normal",
+    "appFeature": "hos_normal_app",
+    "boundDebugDeviceCount": 1,
+    "profileExpiresAtMs": 1823764132000,
+    "installed": true,
+    "permissionApprovalObserved": true,
+    "observedPermissionEvidence": "start() requires both user authResults granted; real callbacks and foreground sample counter observed",
+    "artifact": {
+      "path": "prototype/reader/entry/build/default/outputs/default/entry-default-signed.hap",
+      "bytes": 73456,
+      "sha256": "7299d457a2709345f0ecf4f816fd99d03e8b2c58a6f8c3c2e2fdc0e61e46d819",
+      "zipCrcPassed": true,
+      "keepPrivate": true
+    },
+    "isMock": null,
+    "isMockMeaning": "not implemented in this reader, never interpreted as false"
+  },
+  "tool": {
+    "hdcVersion": "3.2.0d",
+    "testhelperVersion": "1.0.1",
+    "executionHost": "desktop",
+    "selectedTransport": "USB",
+    "server": "127.0.0.1:8710"
+  },
+  "coordinateConvention": "WGS-84 GPX input; independent public geoLocationManager locationChange callbacks compared directly; no datum offset fitted",
+  "criteria": {
+    "fixedPointMinSeparationM": 100,
+    "fixedPointMaxErrorM": 5,
+    "freshTimestampMaxDeltaMs": 5000,
+    "fixedPointMinimumObservedSamples": 5,
+    "recoveryRadiusFromBaselineM": 50,
+    "recoveryMinimumDistanceFromMockM": 100,
+    "normalReportedAccuracyMaxM": 50,
+    "movementIntervalSec": 1,
+    "fixedHoldPoints": 16,
+    "movementPoints": 24,
+    "settleWindowMs": 5000,
+    "motionMinDistinctPoints": 8,
+    "motionOrderBy": "location timestamp then receive timestamp"
+  },
+  "baseline": {
+    "preInjectionObservedSamples": 103,
+    "selectedSamples": 5,
+    "coordinatesPublished": false
+  },
+  "fixedPoints": {
+    "separationM": 133.4340962801746,
+    "results": [
+      {
+        "name": "point-a",
+        "samples": 13,
+        "maxErrorM": 0.0005777803687780733,
+        "passed": true,
+        "commandDurationMs": 419
+      },
+      {
+        "name": "point-b",
+        "samples": 11,
+        "maxErrorM": 0.0005777776171293266,
+        "passed": true,
+        "commandDurationMs": 629
+      }
+    ],
+    "meaning": "digital coordinate agreement, not physical GNSS accuracy"
+  },
+  "motion": {
+    "name": "motion",
+    "samples": 19,
+    "distinctObservedPoints": 19,
+    "maxNearestPointErrorM": 0.0006572806586018155,
+    "timestampSpanMs": 18000,
+    "orderByLocationTimestamp": true,
+    "derivedMedianSpeedMps": 2.4996654037582866,
+    "derivedBearingsDeg": [
+      0
+    ],
+    "distinctPointsAfterCliReturn": 19,
+    "commandDurationMs": 647,
+    "passed": true
+  },
+  "firstStopRecovery": {
+    "passed": true,
+    "samples": 5,
+    "maxDistanceFromBaselineM": 34.26532317300741,
+    "latestTimestampDeltaMs": 112
+  },
+  "commandExitBehavior": {
+    "setCommandReturnedBeforePlaybackEnded": true,
+    "distinctPointsAfterReturn": 19,
+    "scope": "testhelper set command exited; desktop controller abnormal-exit behavior remains Task 8"
+  },
+  "usbGap": {
+    "gapSeconds": 16.371,
+    "samplesDuringUsbGap": 0,
+    "distinctGapPoints": 0,
+    "maxNearestPointErrorM": null,
+    "ordered": true,
+    "firstAndLastDistinct": false,
+    "disconnectedHostMs": 1792230190621.3384,
+    "reconnectedHostMs": 1792230206992.3787,
+    "phoneMinusHostMs": -1490.191162109375,
+    "rawObservationMethod": "post-reconnection retrieval of device-generated callback timestamps",
+    "physicalActionUserConfirmed": true,
+    "passed": false,
+    "stationaryUserConfirmed": true,
+    "continuationVerified": false,
+    "recoveryAgainstOriginalBaseline": {
+      "passed": false,
+      "freshSamples": 45,
+      "distanceM": 107.3347297702561,
+      "reportedAccuracyM": 4.900000095367432,
+      "timestampDeltaRangeMs": [
+        59,
+        127
+      ],
+      "cause": "unresolved; phone stationary per user",
+      "transientReconnectLossObserved": true
+    }
+  },
+  "separateUsbRestoreRepeat": {
+    "purpose": "new independently collected stable normal baseline; original gap failure unchanged",
+    "criteria": {
+      "baselineSamples": 5,
+      "baselineSpreadM": 10,
+      "injectionErrorM": 5,
+      "minimumInjectedSamples": 5,
+      "recoveryRadiusM": 50,
+      "minimumRecoverySamples": 3,
+      "recoveryFreshDeltaMs": 5000,
+      "minimumDistanceFromMockM": 100
+    },
+    "result": {
+      "passed": true,
+      "injectionSamples": 12,
+      "maxInjectionErrorM": 0.0005777803687780733,
+      "injectionPassed": true,
+      "recoveryPassed": true,
+      "recoverySamples": 4,
+      "maxRecoveryDistanceM": 37.829582189572385,
+      "latestTimestampDeltaMs": 126
+    }
+  },
+  "cleanup": {
+    "passed": true,
+    "filesRemoved": 26,
+    "hashCheckedBeforeRemoval": true,
+    "emptyDirectoryRemoved": true,
+    "remoteAbsenceConfirmed": true,
+    "mockDisableConfirmed": true,
+    "freshNormalRecoveryConfirmedBySeparateRepeat": true
+  },
+  "gates": {
+    "g0": true,
+    "g1": true,
+    "g2": true,
+    "verifiedStandalone": false
+  },
+  "limitations": [
+    "USB gap continuation not demonstrated; zero usable callbacks in observed gap",
+    "Original-baseline recovery after USB gap failed with unexplained 107 m shift; retained as failure",
+    "No target-app location, track or record-validity test",
+    "No reboot, lock-screen/background or full computer controller-exit guarantee",
+    "No handset-only mock API or local stop control verified",
+    "Speed and bearing are derived from received coordinates/time, not native speed/bearing fields",
+    "Signed HAP/Profile/device identity/raw location files remain private; Profile expiry is a known deadline, not a system mock-permission grant"
+  ],
+  "inputSha256": {
+    "prototype/reader/AppScope/app.json5": "7ffe139fbf1bc4530d7a22b68c3be98013f335e26319ffa3030e6cb5b752da56",
+    "prototype/reader/AppScope/resources/base/element/string.json": "4d0751050d448485b7670237a849e7c1e5df6b2094a3e46ee2cdd55f26a6c655",
+    "prototype/reader/AppScope/resources/base/media/app_icon.svg": "4795f9dc9fea57adfafc3f5efd8ccfd15f23ea49a2ee1cdbef7635d8c2a5713e",
+    "prototype/reader/build-profile.template.json5": "8191b80bf51b8b527cde49f0a4085da471701fbe9bf17a332bc1b1db8bb905d0",
+    "prototype/reader/build.ps1": "0310254ae1b308825c51d3a234a20cf918f611daf85d930826728aa0a37ac0d6",
+    "prototype/reader/entry/build-profile.json5": "ab6a89261d46045602e8387d49dd8a9bbca8390247c95116eb5ba84cdac7601b",
+    "prototype/reader/entry/hvigorfile.ts": "ac6e20686b93c3aedcb0a9d99c76f87f4552c3a6a94d9f0d7ffe5103dea89864",
+    "prototype/reader/entry/oh-package.json5": "0dda6f294aa229068ae03fd3094dc85c87de39679e6b6376d54796e4c908d351",
+    "prototype/reader/entry/src/main/ets/entryability/EntryAbility.ets": "94964b1ccd8c05f8bbb09c0b9c188d6b99ac81b7a54d32c4bb12706d4fc57c6d",
+    "prototype/reader/entry/src/main/ets/location/LocationReader.ets": "548effc0a2bf9e604c62ed7cabd46bdef4a4884d38cf22fec2fc0788ade16939",
+    "prototype/reader/entry/src/main/ets/pages/Index.ets": "b50bf84ecebeeda0ccee3917eeda4c6b66d269ffc1ef67a147d67966c7eeab49",
+    "prototype/reader/entry/src/main/module.json5": "317eb9c1e04f838d76b52502fa2078d80ddc5a1ee72ac878be4f3babdd515f7a",
+    "prototype/reader/entry/src/main/resources/base/element/color.json": "64b7b20d780b75ec9d8d684558dd22d2151f584f157719c6be6912243add0df3",
+    "prototype/reader/entry/src/main/resources/base/element/string.json": "d6906bb8c85472234868180a9ce8b4edc7c1f78cb6da5ec5e178bf94c21c233c",
+    "prototype/reader/entry/src/main/resources/base/profile/main_pages.json": "4ca3fb089a34d7f463b3af626b3d472b4ae5b2021c64606d272c926535fe0814",
+    "prototype/reader/hvigor/hvigor-config.json5": "b2bae667ad39ed2d3f2eb9a4844a9ca6f17b681eb49848df9038804837162936",
+    "prototype/reader/hvigorfile.ts": "1065d54a286b68cdeab133b484547bacf1313724babf19836051fd680b3db2b8",
+    "prototype/reader/oh-package.json5": "f08fb9d1728492e8b31adc7e13f120cdf5ba5d59697cdb36ffc8033aef5cb485"
+  },
+  "privateEvidenceSha256": {
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/reader-signed-build.txt": "a277fc4ca280d6bd7d7e886a190c520c685e78ceca81d320f916a8d34e05bdc3",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/reader-install-output.txt": "686d36a618b68cfc00ffe1944b879bfc41cf44624dfe1f6408e6ff90b6c6245c",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/reader-start-output.txt": "bc4bd248d1572c3f2e55d8f5b81ea541e62c0d6c7ac7a903b220e672e2f0c83a",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/m0-device-state.json": "eaadfaa7bf17a679df151f2ce779f9e64700a7ea80eed29c7da32df26fa3bd18",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/run_g1_g2.py": "c08a45d6b21d748a2d2c609b7c938a2130e0e869e3358723a98178391d1418bb",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/run_unplug.py": "2eb48ff23d31d701ed3afeb334fbb427cb6de38d526adad2047e153fd7bf942a",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/recheck_restore.py": "05b4f1786a874375eb2434fd827d6921b62d6d82e98cae9cf8c23c44fb433203",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/cleanup_device.py": "8ab60bdb95156ace94549c4b3a5987ca3fd1622b81e42b1ce4cabea489321448",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/m0_device.py": "7d36c2cce15418966fa44765398ac7f38ee65dc08a5d2ce80413dda590c5494a",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/observations.jsonl": "fc992c3ece1a558f228a3b2446f94eb5fbdb12ba4580260a10637eef87f5023d",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/criteria-before-injection.json": "ab9b3d1c305ce3ad8308124ea4d6a6aa4e55023e884e6e8e46ecfcec1aa6d5df",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/unplug-criteria-before-injection.json": "d961bd0f86e127f0ee2e13368161978f940c8714336bcd453f7d087149e4069d",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/restore-repeat-criteria-before-injection.json": "3d305d32ff828e33759ec2041dde17c5b6cd17642aba656637faef5f88f601db",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/usb-presence-private.jsonl": "6e94e70b08422081304dbdeab9bed15d96e2732dd9638359840e08e5701eee44",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/motion.gpx": "0ce7c7983d4285766c50de56162cfeb5f97845a5baca521fcc2589b09162eb9e",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/point-a.gpx": "00d972dee909551eed99580099a3c5b44cf7652dd9e0ced8f45897590eba5472",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/point-b.gpx": "b54ac33d8c5286cc94f8f70042c65e2e6e8bcb37648f94c8c4d4d97f1be1a9c8",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/restore-repeat.gpx": "f291502be5d87ebeaebb5c7ffacee01a7ec27bdb95e85fcfed26dcc05a1b9449",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/usb-gap.gpx": "c8b76141f4d7fc1ef11fc997a625f7e0cc16003b05400d6a8d924dcb742d5037",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/command-0057.txt": "12c83664844cea3bfb47de86f87ee0ec24715cc825570d673b516b87135966b9",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/command-0080.txt": "b82c53a4040946c79c929c60976c72e48d4c775d44a97cb49873facd2720bad8",
+    ".superpowers/sdd/2026-10-16-harmonyos-track-location-plan/private/swm0-465df12ea0/command-0111.txt": "94ace9fb466f847f14b5ab3e10d137df4c102b098e54a2c93de9e8e8da9661d4"
+  },
+  "recomputedPhaseWindows": [
+    {
+      "phase": "point-a.gpx",
+      "startedPhoneMs": 1792229904000,
+      "windowEndPhoneMs": 1792229924000,
+      "recomputedSamples": 13,
+      "recomputedMaxErrorM": 0.0005777803687780733
+    },
+    {
+      "phase": "point-b.gpx",
+      "startedPhoneMs": 1792229927000,
+      "windowEndPhoneMs": 1792229946000,
+      "recomputedSamples": 11,
+      "recomputedMaxErrorM": 0.0005777776171293266
+    },
+    {
+      "phase": "motion.gpx",
+      "startedPhoneMs": 1792229950000,
+      "windowEndPhoneMs": 1792229980000,
+      "recomputedSamples": 19,
+      "recomputedMaxErrorM": 0.0006572806586018155
+    }
+  ],
+  "recomputedFromRawObservations": true,
+  "gitAtHandoff": {
+    "branch": "main",
+    "hasCommits": false,
+    "initializationPerformedByThisSession": false
+  }
+}

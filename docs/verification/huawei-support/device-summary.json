@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-16",
+  "device": {
+    "model": "SGT-AL50",
+    "softwareVersion": "SGT-AL50 7.0.0.109(SP6C00E105R3P3)",
+    "baseOsFullname": "OpenHarmony-7.0.0.105",
+    "apiVersion": 26,
+    "shellUid": 2000
+  },
+  "tool": {
+    "hdcVersion": "3.2.0d",
+    "usbConnectionVerified": true
+  },
+  "targetApp": {
+    "bundleName": "com.zjwh.hm_wh_physicalfitness",
+    "versionName": "7.3.92",
+    "versionCode": 1000114,
+    "entryModule": "entry",
+    "identification": "User opened Sport World; foreground mission record matched bundle; bm dump -n retrieved metadata"
+  },
+  "appOwnership": "existing third-party app; not developed by applicant",
+  "locationOverrideVerified": false
+}
