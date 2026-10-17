@@ -10,7 +10,7 @@
 
 **Spec:** [已通过的设计规范](../specs/2026-10-16-harmonyos-track-location-design.md)。执行者必须先读规范和本计划。
 
-状态：用户已选择本会话逐步执行。2026-10-17 普通读取应用自动调试签名、安装授权和实际回调已验证；testhelper GPX 两固定点、短序列与有线停止恢复通过，USB G0–G2 通过。物理拔线约16秒无有效回调，原基线恢复存在未解释107米偏差，另一次新稳定基线USB启停复核通过；脱机仍未证实。任务2、任务3桌面基础和任务4轨迹引擎完成，任务5–9尚未开始，运动世界定位兼容性未测试。详见 [M0 结果](../../verification/m0-results.md)。
+状态：用户已选择本会话逐步执行。2026-10-17 普通读取应用自动调试签名、安装授权和实际回调已验证；testhelper GPX 两固定点、短序列与有线停止恢复通过，USB G0–G2 通过。物理拔线约16秒无有效回调，原基线恢复存在未解释107米偏差，另一次新稳定基线USB启停复核通过；脱机仍未证实。任务2及任务3–5完成，任务6–9尚未开始，运动世界定位兼容性未测试。详见 [M0 结果](../../verification/m0-results.md)。
 
 ## Global Constraints
 
@@ -54,6 +54,7 @@
 | `desktop/src/probe/capabilities.ts` | 将 M0 报告转为可用能力，任务 3 |
 | `desktop/src/core/replay.ts` | 配速、单调时间、暂停与圈数，任务 4 |
 | `desktop/src/executor/contract.ts`、`verified-executor.ts`、`observer.ts` | 实际定位入口及独立读取通道，任务 5 |
+| `desktop/scripts/verify-executor-device.mjs`、`docs/verification/task5-verified-executor.md`、任务5脱敏证据 | 受控真机复验及恢复限制，任务 5 |
 | `desktop/src/core/session.ts`、`desktop/src/logging/journal.ts` | 会话状态、恢复与日志，任务 6 |
 | `desktop/src/server.ts`、`desktop/src/index.ts`、`desktop/web/` | 本地 API、入口和控制界面，任务 7 |
 | `desktop/tests/*.test.mjs`、`desktop/tests/fixtures/` | 桌面逻辑测试与合成数据，任务 3–7 |
@@ -169,7 +170,7 @@
 - [x] 实现接口：速度为 `1000 / paceSecPerKm`；使用注入的单调时间源累计运行时间并扣除暂停时间；完成距离为 `route.lengthM * laps`。
 - [x] 重跑构建和本任务测试，要求零失败；若已有 Git，提交本任务文件。
 
-实际验收（2026-10-17）：严格构建、14个新增轨迹测试及40个全量测试通过；暂停边界、终点轮询和非法调用语义见[任务4报告](../../verification/task4-time-driven-replay.md)。任务5–9尚未开始，本轮未进行手机操作。
+实际验收（2026-10-17）：严格构建、14个新增轨迹测试及40个全量测试通过；暂停边界、终点轮询和非法调用语义见[任务4报告](../../verification/task4-time-driven-replay.md)。该轮未进行手机操作；后续任务5已完成，见下方验收记录。
 
 ### Task 5：接入已验证的定位执行与独立读取通道（M1）
 
@@ -179,15 +180,17 @@
 
 `contract.ts` 导出上述 `LocationExecutor`、`PositionObserver`，并将 `send` 的返回值命名为 `SendReceipt`、`stop` 的返回值命名为 `StopReceipt`。`verified-executor.ts` 产出 `createVerifiedExecutor(capabilities: Capabilities, hdc: HdcClient, observer: PositionObserver): LocationExecutor`；`observer.ts` 产出 `createPositionObserver(hdc: HdcClient, targetId: string): PositionObserver`，其数据通道来自 M0 实测记录。
 
-任务3接口核对补充：本任务在HdcClient新增显式目标命令调用，调用前重新requireTarget，始终保留独立的-t参数；由适配器限定固定命令和已校验的远端参数。任务3保留的通用runProcess不直接暴露给界面。
+任务3接口核对补充：本任务在HdcClient新增显式目标命令调用，调用前重新requireTarget，始终保留独立的-t参数；由适配器限定固定命令和已校验的远端参数。任务3保留的通用runProcess不直接暴露给界面。runTarget的signal覆盖USB查询及命令，beforeRun同步守卫在最终查询后、实际派发前复查写入授权；stop不受授权过期阻止。
 
-- [ ] 写失败测试 `unverified_executor_refuses_prepare`、`target_change_refused`、`expired_authorization_refused`、`injection_error_preserved`，断言未验证／不匹配／过期能力不能执行，实际错误码不被吞掉（RF1、RF5）。
-- [ ] 写失败测试 `accepted_does_not_mean_observed`：发送被接受但没有独立样本时，只返回执行结果，不生成读取结果或恢复成功记录。
-- [ ] 固定该用例断言 `assert.equal(receipt.accepted, true)` 与 `assert.equal(await observer.latest(), null)` 同时成立，防止将发送成功冒充观测成功。
-- [ ] 运行 `npm run build`、`node --test desktop/tests/executor.test.mjs`，确认失败后，严格按 M0 记录的真实入口和数据通道实现接口。
-- [ ] 如 M0 证实需要手机辅助程序，先按实际 SDK 和已取得的授权补充 `prototype/probe/README.md` 的文件、调用及签名安排，再接入该路径；未取得支持的系统接口不能靠类型断言或假实现替代。
-- [ ] 重跑构建和测试，随后用独立读取复验两个固定点及停止恢复。只有自动化测试通过而没有设备复验时，本任务仍未完成。
-- [ ] 若已有 Git，提交适配代码与脱敏说明；原始日志和签名材料留在本机。
+- [x] 写失败测试 `unverified_executor_refuses_prepare`、`target_change_refused`、`expired_authorization_refused`、`injection_error_preserved`，断言未验证／不匹配／过期能力不能执行，实际错误码不被吞掉（RF1、RF5）。
+- [x] 写失败测试 `accepted_does_not_mean_observed`：发送被接受但没有独立样本时，只返回执行结果，不生成读取结果或恢复成功记录。
+- [x] 固定该用例断言 `assert.equal(receipt.accepted, true)` 与 `assert.equal(await observer.latest(), null)` 同时成立，防止将发送成功冒充观测成功。
+- [x] 运行 `npm run build`、`node --test desktop/tests/executor.test.mjs`，确认失败后，严格按 M0 记录的真实入口和数据通道实现接口。
+- [x] 如 M0 证实需要手机辅助程序，先按实际 SDK 和已取得的授权补充 `prototype/probe/README.md` 的文件、调用及签名安排，再接入该路径；未取得支持的系统接口不能靠类型断言或假实现替代。
+- [x] 重跑构建和测试，随后用独立读取复验两个固定点及停止恢复。只有自动化测试通过而没有设备复验时，本任务仍未完成。
+- [x] 若已有 Git，提交适配代码与脱敏说明；原始日志和签名材料留在本机。
+
+实际验收（2026-10-17）：严格构建和60个全量测试通过；已验证单点GPX重复下发及两个相距133.434米的固定点。完整试验原基线恢复约51米偏差未通过，另一次新稳定基线下独立USB停止恢复通过；判据未放宽、失败保留，详见[任务5报告](../../verification/task5-verified-executor.md)。沿用已有独立读取HAP，无需新增手机定位执行程序。任务6–9尚未开始。
 
 ### Task 6：实现会话状态、日志和恢复判定（M1）
 
