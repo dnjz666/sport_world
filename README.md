@@ -2,7 +2,7 @@
 
 面向华为 Mate 80 Pro，验证通过官方调试工具向系统提供测试位置，并由独立应用读取实际坐标。按已批准设计先做真机验证，再实现 USB 轨迹工具，最后依据实测决定脱机方案。
 
-**2026-10-17：USB 方式的 M0（G0／G1／G2）已通过，桌面产品尚未开始。** 模拟已关闭，本轮手机临时文件已清理。此处记录验证结果，不表示手机当前连接状态。
+**2026-10-17：USB M0 已通过，任务 3 的桌面基础库已实现。** 已提供设备选择、路线校验与计算、证据能力检查；控制界面和轨迹执行尚待后续任务。M0 测试结束时模拟已关闭、临时文件已清理，此处不表示手机当前状态。
 
 | 项目 | 结果 |
 | --- | --- |
@@ -13,7 +13,7 @@
 | 有线停止恢复 | 首次试验及独立复核通过，取得关闭后带新时间的正常位置 |
 | 拔线继续运行 | 未证实；16.371 秒断线内无可用样本，原基线恢复有未解释偏差，详见报告 |
 | 运动世界读取／轨迹／记录 | 尚未验证；本轮没有启动或提交运动记录 |
-| 完整桌面／手机产品 | 任务 3–9 尚未开始；下一项为桌面基础与路线校验 |
+| 桌面基础 | 任务 3 已完成，26 个测试通过；任务 4–9 尚未开始 |
 
 证据及拔线限制见 [M0 结果](docs/verification/m0-results.md)和[脱敏真机证据](docs/verification/evidence/2026-10-17-reader-device-probe.json)。`verifiedStandalone` 保持 false。持续 USB 是当前开发路线；工具成功或系统定位改变都不能自动证明运动世界认可记录。
 
@@ -37,6 +37,7 @@ AGENT.md                       单一执行规范，无映射或重复规则文�
 docs/superpowers/specs/         已批准设计
 docs/superpowers/plans/         任务、接口与验收步骤
 docs/verification/             真机结果及脱敏证据
+desktop/                      TypeScript 基础库、合成测试与使用说明
 prototype/reader/              独立读取工程
 prototype/probe/               testhelper 已验证调用与限制
 prototype/permission-probe/    历史只读权限诊断
@@ -58,4 +59,12 @@ tools/                        忽略的本机官方工具／缓存
 
 执行前读 [AGENT.md](AGENT.md)、[设计](docs/superpowers/specs/2026-10-16-harmonyos-track-location-design.md)、[实施计划](docs/superpowers/plans/2026-10-16-harmonyos-track-location-plan.md)和 [M0 结果](docs/verification/m0-results.md)。用户已选择在本会话顺序执行，常规已授权步骤连续推进，实际外部条件再具体交接。
 
-下一项为计划任务 3。根目录产品 `package.json`、`desktop/` 和 `mobile/` 尚未建立，不运行尚不存在的根级 `npm run build`／`npm start`。Git 已建立，本地初始快照用于保存设计、读取原型及脱敏 M0 证据；产品代码开始前安排隔离，保留本机签名配置及所有忽略规则。运动世界兼容性按任务 8 验收，手机独立运行按任务 9 单独验收。
+任务 3 的实现和验证见 [桌面基础库说明](desktop/README.md)及[任务 3 验证](docs/verification/task3-desktop-foundation.md)。在仓库根目录使用 Node 26.1.0 或更高版本：
+
+```powershell
+npm ci
+npm run build
+npm test
+```
+
+当前只提供基础库，`npm start` 的控制服务入口留待任务 7。下一项为任务 4 的时间驱动轨迹引擎；`mobile/` 尚未建立。运动世界兼容性按任务 8 验收，手机独立运行按任务 9 单独验收。实际设备执行仍须独立检查目标、权限和恢复，不由合成测试推出。

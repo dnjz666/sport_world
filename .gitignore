@@ -13,3 +13,6 @@
 /prototype/reader/*.p12
 /prototype/reader/*.p7b
 /prototype/reader/*.cer
+/node_modules/
+/desktop/dist/
+/local-data/

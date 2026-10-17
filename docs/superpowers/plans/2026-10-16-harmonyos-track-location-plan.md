@@ -10,7 +10,7 @@
 
 **Spec:** [已通过的设计规范](../specs/2026-10-16-harmonyos-track-location-design.md)。执行者必须先读规范和本计划。
 
-状态：用户已选择本会话逐步执行。2026-10-17 普通读取应用自动调试签名、安装授权和实际回调已验证；testhelper GPX 两固定点、短序列与有线停止恢复通过，USB G0–G2 通过。物理拔线约16秒无有效回调，原基线恢复存在未解释107米偏差，另一次新稳定基线USB启停复核通过；脱机仍未证实。任务2完成，任务3–9尚未开始，运动世界定位兼容性未测试。详见 [M0 结果](../../verification/m0-results.md)。
+状态：用户已选择本会话逐步执行。2026-10-17 普通读取应用自动调试签名、安装授权和实际回调已验证；testhelper GPX 两固定点、短序列与有线停止恢复通过，USB G0–G2 通过。物理拔线约16秒无有效回调，原基线恢复存在未解释107米偏差，另一次新稳定基线USB启停复核通过；脱机仍未证实。任务2及任务3桌面基础完成，任务4–9尚未开始，运动世界定位兼容性未测试。详见 [M0 结果](../../verification/m0-results.md)。
 
 ## Global Constraints
 
@@ -25,7 +25,7 @@
 - G0、G1、G2 未通过，不执行完整产品任务 3–9；缺少授权或设备时报告待验证，不能假定支持或直接宣布不可行。
 - 电脑界面移动、接口返回成功、模拟器成功都不能代替目标真机的独立读取结果。
 - 本地控制服务只绑定 `127.0.0.1`；不把界面输入拼接为任意 shell 命令。
-- 规划时目录只有文档且不是 Git 仓库；M0 结束时已存在 main 空仓库，用户随后授权创建本地首次提交，远端自行上传。初始快照包括设计、读取原型、忽略规则和脱敏验证证据；未安装产品依赖或编写完整产品代码。进入产品任务前按工作区流程安排隔离。
+- 规划时目录只有文档且不是 Git 仓库；M0 后已创建本地首次提交。任务3在用户选择的独立工作树实现并锁定桌面依赖；完整轨迹执行和控制服务尚未实现，远端由用户自行上传。后续任务继续按工作区流程安排隔离。
 
 ## Review Focus
 
@@ -37,7 +37,7 @@
 
 ## 文件与职责
 
-下表列出各任务的文件职责；M0 的部分验证文件现已生成，产品代码尚未创建，具体进度以上下文状态和任务复选框为准。
+下表列出各任务的文件职责；M0 验证文件及任务3基础模块已生成，其余产品模块按任务继续实现，具体进度以上下文状态和任务复选框为准。
 
 | 文件或目录 | 职责与所属任务 |
 | --- | --- |
@@ -142,15 +142,17 @@
 
 `process.ts` 产出 `runProcess(executable: string, args: readonly string[], options: { signal?: AbortSignal }): Promise<{ exitCode: number, stdout: string, stderr: string }>`；`client.ts` 导出 `HdcClient`，构造参数为 `{ executable: string, run: typeof runProcess }`。`pointAtDistance` 按路线长度取模，整圈端点返回首点。
 
-- [ ] 初始化桌面构建和锁定依赖：安装 TypeScript 和 Node 类型声明并写入精确版本与锁文件；记录实际 Node／npm 版本，不覆盖 DevEco 自带运行时。
-- [ ] 写失败测试：`empty_targets_returns_empty` 断言 `[Empty]` 返回空列表；`explicit_target_required` 断言多设备时未指定或不匹配目标均被拒绝；`arguments_are_not_shell_text` 断言设备参数作为独立参数传递（RF1）。
-- [ ] 写失败测试：`invalid_route_rejected` 对损坏 JSON、NaN、Infinity、越界经纬度、非 WGS-84、少于 3 个不同点、零长度路线断言明确错误；`long_segment_rejected` 对大于 500 米的单段连接断言提示异常连接。500 米是本首版操场输入规则，不是平台限制（RF2）。
-- [ ] 写失败测试：`proof_required_for_capability` 对证据缺失或任意 G0–G2 未通过断言 `canInject === false`；`expired_or_wrong_device_proof_rejected` 对期限已过、设备或构建不匹配断言不可用（RF5）。
-- [ ] 在上述测试中固定关键断言：空设备输出使用 `assert.deepEqual(await client.listTargets(), [])`；将报告期限设为 `context.nowMs - 1` 后使用 `assert.equal(capabilitiesFromReport(report, context).canInject, false)`。
-- [ ] 运行 `npm run build` 后分别运行 `node --test desktop/tests/hdc.test.mjs`、`node --test desktop/tests/route.test.mjs`、`node --test desktop/tests/capabilities.test.mjs`，确认对应行为尚未实现。
-- [ ] 实现以上接口。HDC 使用进程参数数组及 `shell: false`；读取报告须检查证据文件存在。路线采用半径 `6371008.8` 米的球面距离与沿线插值，闭合路线只补一次首点，拒绝零长度段。
-- [ ] 加入数值测试：赤道上经度差 0.001 度的距离约 `111.1950802335` 米（允许 0.01 米计算误差）；往东朝向约 90 度；正反方向经过相同闭合路线，累计长度一致。
-- [ ] 重跑构建及以上测试，要求零失败。检查类型、返回值和文件名与后续任务一致；若已有 Git，提交本任务文件。
+- [x] 初始化桌面构建和锁定依赖：安装 TypeScript 和 Node 类型声明并写入精确版本与锁文件；记录实际 Node／npm 版本，不覆盖 DevEco 自带运行时。
+- [x] 写失败测试：`empty_targets_returns_empty` 断言 `[Empty]` 返回空列表；`explicit_target_required` 断言多设备时未指定或不匹配目标均被拒绝；`arguments_are_not_shell_text` 断言设备参数作为独立参数传递（RF1）。
+- [x] 写失败测试：`invalid_route_rejected` 对损坏 JSON、NaN、Infinity、越界经纬度、非 WGS-84、少于 3 个不同点、零长度路线断言明确错误；`long_segment_rejected` 对大于 500 米的单段连接断言提示异常连接。500 米是本首版操场输入规则，不是平台限制（RF2）。
+- [x] 写失败测试：`proof_required_for_capability` 对证据缺失或任意 G0–G2 未通过断言 `canInject === false`；`expired_or_wrong_device_proof_rejected` 对期限已过、设备或构建不匹配断言不可用（RF5）。
+- [x] 在上述测试中固定关键断言：空设备输出使用 `assert.deepEqual(await client.listTargets(), [])`；将报告期限设为 `context.nowMs - 1` 后使用 `assert.equal(capabilitiesFromReport(report, context).canInject, false)`。
+- [x] 运行 `npm run build` 后分别运行 `node --test desktop/tests/hdc.test.mjs`、`node --test desktop/tests/route.test.mjs`、`node --test desktop/tests/capabilities.test.mjs`，确认对应行为尚未实现。
+- [x] 实现以上接口。HDC 使用进程参数数组及 `shell: false`；读取报告须检查证据文件存在。路线采用半径 `6371008.8` 米的球面距离与沿线插值，闭合路线只补一次首点，拒绝零长度段。
+- [x] 加入数值测试：赤道上经度差 0.001 度的距离约 `111.1950802335` 米（允许 0.01 米计算误差）；往东朝向约 90 度；正反方向经过相同闭合路线，累计长度一致。
+- [x] 重跑构建及以上测试，要求零失败。检查类型、返回值和文件名与后续任务一致；若已有 Git，提交本任务文件。
+
+实际验收：Node 26.1.0／npm 11.13.0；TypeScript 7.0.2、@types/node 26.6.5；锁文件离线安装、严格构建及26个全量测试通过，详见[任务3报告](../../verification/task3-desktop-foundation.md)。本轮仅完成任务3，任务4–9仍未开始。
 
 ### Task 4：实现时间驱动的轨迹引擎（M1）
 
@@ -169,11 +171,13 @@
 
 ### Task 5：接入已验证的定位执行与独立读取通道（M1）
 
-**Files:** Create `desktop/src/executor/contract.ts`、`verified-executor.ts`、`observer.ts`；Test `desktop/tests/executor.test.mjs`。
+**Files:** Create `desktop/src/executor/contract.ts`、`verified-executor.ts`、`observer.ts`；Modify `desktop/src/hdc/client.ts`；Test `desktop/tests/executor.test.mjs`、`desktop/tests/hdc.test.mjs`。
 
 **Interfaces:** `LocationExecutor.prepare(context: { sessionId: string, targetId: string, mode: 'usb' | 'standalone' }): Promise<void>`；`send(sample: Sample): Promise<{ sessionId: string, sequence: number, accepted: boolean, errorCode: string | null }>`；`stop(): Promise<{ accepted: boolean, errorCode: string | null }>`；`PositionObserver.latest(): Promise<ObservedLocation | null>`。
 
 `contract.ts` 导出上述 `LocationExecutor`、`PositionObserver`，并将 `send` 的返回值命名为 `SendReceipt`、`stop` 的返回值命名为 `StopReceipt`。`verified-executor.ts` 产出 `createVerifiedExecutor(capabilities: Capabilities, hdc: HdcClient, observer: PositionObserver): LocationExecutor`；`observer.ts` 产出 `createPositionObserver(hdc: HdcClient, targetId: string): PositionObserver`，其数据通道来自 M0 实测记录。
+
+任务3接口核对补充：本任务在HdcClient新增显式目标命令调用，调用前重新requireTarget，始终保留独立的-t参数；由适配器限定固定命令和已校验的远端参数。任务3保留的通用runProcess不直接暴露给界面。
 
 - [ ] 写失败测试 `unverified_executor_refuses_prepare`、`target_change_refused`、`expired_authorization_refused`、`injection_error_preserved`，断言未验证／不匹配／过期能力不能执行，实际错误码不被吞掉（RF1、RF5）。
 - [ ] 写失败测试 `accepted_does_not_mean_observed`：发送被接受但没有独立样本时，只返回执行结果，不生成读取结果或恢复成功记录。
