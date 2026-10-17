@@ -10,7 +10,7 @@
 
 **Spec:** [已通过的设计规范](../specs/2026-10-16-harmonyos-track-location-design.md)。执行者必须先读规范和本计划。
 
-状态：用户已选择本会话逐步执行。2026-10-17 普通读取应用自动调试签名、安装授权和实际回调已验证；testhelper GPX 两固定点、短序列与有线停止恢复通过，USB G0–G2 通过。物理拔线约16秒无有效回调，原基线恢复存在未解释107米偏差，另一次新稳定基线USB启停复核通过；脱机仍未证实。任务2及任务3桌面基础完成，任务4–9尚未开始，运动世界定位兼容性未测试。详见 [M0 结果](../../verification/m0-results.md)。
+状态：用户已选择本会话逐步执行。2026-10-17 普通读取应用自动调试签名、安装授权和实际回调已验证；testhelper GPX 两固定点、短序列与有线停止恢复通过，USB G0–G2 通过。物理拔线约16秒无有效回调，原基线恢复存在未解释107米偏差，另一次新稳定基线USB启停复核通过；脱机仍未证实。任务2、任务3桌面基础和任务4轨迹引擎完成，任务5–9尚未开始，运动世界定位兼容性未测试。详见 [M0 结果](../../verification/m0-results.md)。
 
 ## Global Constraints
 
@@ -152,7 +152,7 @@
 - [x] 加入数值测试：赤道上经度差 0.001 度的距离约 `111.1950802335` 米（允许 0.01 米计算误差）；往东朝向约 90 度；正反方向经过相同闭合路线，累计长度一致。
 - [x] 重跑构建及以上测试，要求零失败。检查类型、返回值和文件名与后续任务一致；若已有 Git，提交本任务文件。
 
-实际验收：Node 26.1.0／npm 11.13.0；TypeScript 7.0.2、@types/node 26.6.5；锁文件离线安装、严格构建及26个全量测试通过，详见[任务3报告](../../verification/task3-desktop-foundation.md)。本轮仅完成任务3，任务4–9仍未开始。
+实际验收：Node 26.1.0／npm 11.13.0；TypeScript 7.0.2、@types/node 26.6.5；锁文件离线安装、严格构建及26个全量测试通过，详见[任务3报告](../../verification/task3-desktop-foundation.md)。该轮仅完成任务3；后续任务4已完成，见下方验收记录。
 
 ### Task 4：实现时间驱动的轨迹引擎（M1）
 
@@ -160,14 +160,16 @@
 
 **Interfaces:** 消费任务 3 的路线和类型；`createReplay(route: CompiledRoute, settings: RunSettings, clock: Clock): Replay`。`Replay` 提供 `start(): void`、`pause(): void`、`resume(): void`、`next(): Sample`、`finished(): boolean`。
 
-- [ ] 写 `pace_and_elapsed_time`：配速 300 秒／公里时，30 秒累计行进约 100 米；当前位置对应沿线 100 米处。
-- [ ] 写 `pause_does_not_catch_up`：暂停 60 秒后累计距离和 `elapsedMs` 不变，采样时间更新、速度为零；继续后只累计实际运行时间。
-- [ ] 固定暂停断言 `assert.equal(paused.elapsedMs, beforePause.elapsedMs)`、`assert.equal(paused.speedMps, 0)`、`assert.ok(paused.epochMs > beforePause.epochMs)`；配速用例以独立期望距离 100 米和路线插值位置比较。
-- [ ] 写 `wall_clock_jump_does_not_move_runner` 和 `delayed_tick_uses_elapsed_time`：仅改变 `epochMs` 不改变位置；漏掉数次调度后按单调经过时间计算当前位置，不突发补发旧样本（RF3）。
-- [ ] 写 `lap_end_emitted_once`、`reverse_route_preserved`、`invalid_settings_rejected`：圈界连续、最后样本只输出一次、完成后不继续前进，拒绝非正配速／采样周期及非正整数圈数。
-- [ ] 运行 `npm run build`、`node --test desktop/tests/replay.test.mjs`，确认测试因对应行为缺失失败。
-- [ ] 实现接口：速度为 `1000 / paceSecPerKm`；使用注入的单调时间源累计运行时间并扣除暂停时间；完成距离为 `route.lengthM * laps`。
-- [ ] 重跑构建和本任务测试，要求零失败；若已有 Git，提交本任务文件。
+- [x] 写 `pace_and_elapsed_time`：配速 300 秒／公里时，30 秒累计行进约 100 米；当前位置对应沿线 100 米处。
+- [x] 写 `pause_does_not_catch_up`：暂停 60 秒后累计距离和 `elapsedMs` 不变，采样时间更新、速度为零；继续后只累计实际运行时间。
+- [x] 固定暂停断言 `assert.equal(paused.elapsedMs, beforePause.elapsedMs)`、`assert.equal(paused.speedMps, 0)`、`assert.ok(paused.epochMs > beforePause.epochMs)`；配速用例以独立期望距离 100 米和路线插值位置比较。
+- [x] 写 `wall_clock_jump_does_not_move_runner` 和 `delayed_tick_uses_elapsed_time`：仅改变 `epochMs` 不改变位置；漏掉数次调度后按单调经过时间计算当前位置，不突发补发旧样本（RF3）。
+- [x] 写 `lap_end_emitted_once`、`reverse_route_preserved`、`invalid_settings_rejected`：圈界连续、最后样本只输出一次、完成后不继续前进，拒绝非正配速／采样周期及非正整数圈数。
+- [x] 运行 `npm run build`、`node --test desktop/tests/replay.test.mjs`，确认测试因对应行为缺失失败。
+- [x] 实现接口：速度为 `1000 / paceSecPerKm`；使用注入的单调时间源累计运行时间并扣除暂停时间；完成距离为 `route.lengthM * laps`。
+- [x] 重跑构建和本任务测试，要求零失败；若已有 Git，提交本任务文件。
+
+实际验收（2026-10-17）：严格构建、14个新增轨迹测试及40个全量测试通过；暂停边界、终点轮询和非法调用语义见[任务4报告](../../verification/task4-time-driven-replay.md)。任务5–9尚未开始，本轮未进行手机操作。
 
 ### Task 5：接入已验证的定位执行与独立读取通道（M1）
 
