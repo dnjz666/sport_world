@@ -95,7 +95,7 @@
 
 任务 1–2 的主要验证是实际设备与证据审查，不为文档或环境读取编写空洞测试。任务 3–7 按“功能测试先失败 → 最小实现 → 对应测试通过”的顺序执行。
 
-桌面测试用 `.test.mjs` 导入编译后的 `desktop/dist/`。任务 3 将 `package.json` 的 `type` 设为 `module`，创建脚本：`build` 为 `tsc -p desktop/tsconfig.json`，`test` 为 `node --test`，`start` 为 `node desktop/dist/index.js`。`tsconfig` 使用严格检查、NodeNext 模块与解析、ES2022 目标、`rootDir: src`、`outDir: dist`，源码内本地模块导入使用编译后的 `.js` 扩展名。
+桌面测试用 `.test.mjs` 导入编译后的 `desktop/dist/`。任务 3 将 `package.json` 的 `type` 设为 `module`，创建脚本：`build` 为 `tsc -p desktop/tsconfig.json`，`test` 为 `node --test "desktop/tests/*.test.mjs"`，`start` 为 `node desktop/dist/index.js`。测试发现限定到计划的桌面测试目录，避免扫描本机忽略的 SDK 文件。`tsconfig` 使用严格检查、NodeNext 模块与解析、ES2022 目标、`rootDir: src`、`outDir: dist`，源码内本地模块导入使用编译后的 `.js` 扩展名。
 
 每次先运行 `npm run build`，再运行该任务指定的测试。测试的初始失败须来自缺少对应行为，而不是环境或拼写错误。测试数据不能作为真机能力证明。
 

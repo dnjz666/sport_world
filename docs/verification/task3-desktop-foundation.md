@@ -18,6 +18,8 @@
 
 已完成一次独立只读代码审查，未发现阻塞性代码问题；审查另行复核了类型检查和26个测试。M0 报告中过期的“下一项任务3”接续说明已同步为任务4，保留原有真机结果和限制。
 
+合入 D 盘主目录时，原先的 `node --test` 还扫描了本机忽略的华为 SDK：项目的26个测试通过，另有3个 SDK 文件因模块环境或缺少 `@ohos/hvigor` 失败。测试入口已限定为 `node --test "desktop/tests/*.test.mjs"`，保留全部项目测试；未修改 SDK。
+
 ## 行为与接口
 
 返回类型及模块名称沿用[实施计划](../superpowers/plans/2026-10-16-harmonyos-track-location-plan.md)。HDC 只选 Connected USB，参数以数组传入 shell:false 的真实进程边界；列出一个设备也不会代替显式选择，所选目标消失会拒绝。

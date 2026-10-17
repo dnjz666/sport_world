@@ -16,6 +16,8 @@ npm test
 
 已从 npm 生成的锁文件离线重新安装，并实际通过全部 26 个测试。node_modules 和 dist 均不提交；测试不连接手机。npm start 的服务入口在任务 7 实现后才可用。
 
+npm test 仅发现 desktop/tests/*.test.mjs，避免将本机 tools 目录中 SDK 自带的测试作为项目测试运行。新增桌面测试沿用该目录和命名约定。
+
 若系统浏览器／PowerShell 能连接 npm，而 npm 超时，可核对 npm 是否沿用系统已有代理。本轮只为安装进程设置代理，未改全局配置、关闭 TLS 校验或切换镜像；常规环境无需此调整。
 
 ## 模块
