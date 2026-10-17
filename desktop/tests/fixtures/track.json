@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "name": "Synthetic equatorial square",
+  "coordinateSystem": "WGS-84",
+  "points": [
+    { "latitude": 0, "longitude": 0 },
+    { "latitude": 0, "longitude": 0.001 },
+    { "latitude": 0.001, "longitude": 0.001 },
+    { "latitude": 0.001, "longitude": 0 }
+  ]
+}
