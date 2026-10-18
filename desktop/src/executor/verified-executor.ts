@@ -66,8 +66,10 @@ export function createVerifiedExecutor(capabilities: Capabilities, hdc: HdcClien
   }
 
   async function cleanup(): Promise<StopReceipt> {
-    if (state === 'idle') return { accepted: false, errorCode: '执行器尚未准备，没有已确认的停止结果' };
-    if (state === 'stopped') return { accepted: true, errorCode: null };
+    if (state === 'idle') {
+      try { requireProof(); await requireBuild(); }
+      catch (error) { return { accepted: false, errorCode: message(error) }; }
+    }
     state = 'failed';
     try {
       // Expired proof must never prevent a restoration attempt on the same explicit USB target.
@@ -104,7 +106,7 @@ export function createVerifiedExecutor(capabilities: Capabilities, hdc: HdcClien
     prepare(context): Promise<void> {
       const requested = { ...context };
       return serialize(async () => {
-        if (state !== 'idle') throw new Error('执行器已准备或使用，请创建新实例');
+        if (state !== 'idle' && state !== 'stopped') throw new Error('执行器正在使用或需要清理，不能重新准备');
         if (requested.targetId !== capability.targetId) throw new Error('目标设备与定位能力证据不匹配');
         if (requested.mode !== 'usb') throw new Error('当前适配器仅支持 USB，脱机执行尚未验证');
         if (typeof requested.sessionId !== 'string' || !requested.sessionId.trim() || requested.sessionId.length > 128) {
@@ -114,6 +116,7 @@ export function createVerifiedExecutor(capabilities: Capabilities, hdc: HdcClien
         await requireBuild();
         await observer.latest(); // Establish the independent channel; null never becomes a made-up location.
         sessionId = requested.sessionId;
+        lastSequence = 0;
         state = 'failed';
         remoteDir = '/data/local/tmp/swtrack-' + randomUUID().replaceAll('-', '');
         localDir = await mkdtemp(join(tmpdir(), 'sport-world-executor-'));
@@ -127,7 +130,7 @@ export function createVerifiedExecutor(capabilities: Capabilities, hdc: HdcClien
     send(input): Promise<SendReceipt> {
       const sample = { ...input };
       return serialize(async () => {
-        if (state !== 'prepared') throw new Error('执行器未准备或已停止；需要先清理并创建新实例');
+        if (state !== 'prepared') throw new Error('执行器未准备或已停止；需要先完成清理并重新准备');
         const receipt = (accepted: boolean, errorCode: string | null): SendReceipt =>
           ({ sessionId, sequence: sample.sequence, accepted, errorCode });
         if (!Number.isSafeInteger(sample.sequence) || sample.sequence <= lastSequence ||

@@ -204,6 +204,34 @@ test('accepted_does_not_mean_observed', async (t) => {
   assert.equal(device.files.size, 0);
 });
 
+test('verified_executor_can_clear_before_prepare_and_reuse_only_after_cleanup', async (t) => {
+  const { executor, device } = fixture(t);
+  assert.equal((await executor.stop()).accepted, true);
+  assert.ok(device.calls.some((args) => args.includes('disable-location-mock')));
+  await executor.prepare(context);
+  await executor.send(sample);
+  await assert.rejects(() => executor.prepare({ ...context, sessionId: 'blocked-active' }));
+  await executor.stop();
+  await executor.prepare({ ...context, sessionId: 'synthetic-second-session' });
+  const receipt = await executor.send(sample);
+  assert.equal(receipt.accepted, true);
+  assert.equal(receipt.sessionId, 'synthetic-second-session');
+  const directories = device.calls.filter((args) => args.includes('mkdir')).map((args) => args.at(-1));
+  assert.equal(new Set(directories).size, 2);
+  await executor.stop();
+  assert.equal(device.files.size, 0);
+});
+
+test('a_new_preflight_stop_reissues_disable_instead_of_reusing_an_old_receipt', async (t) => {
+  const { executor, device } = fixture(t);
+  await executor.stop();
+  const previous = device.calls.filter((args) => args.includes('disable-location-mock')).length;
+  device.mockEnabled = true; // A later session cannot trust the previous session's cached receipt.
+  await executor.stop();
+  assert.equal(device.calls.filter((args) => args.includes('disable-location-mock')).length, previous + 1);
+  assert.equal(device.mockEnabled, false);
+});
+
 test('wrong_build_and_standalone_rejected_before_enable', async (t) => {
   const { executor, device } = fixture(t);
   device.systemBuild = 'changed-build';

@@ -2,7 +2,7 @@
 
 面向华为 Mate 80 Pro，验证通过官方调试工具向系统提供测试位置，并由独立应用读取实际坐标。按已批准设计先做真机验证，再实现 USB 轨迹工具，最后依据实测决定脱机方案。
 
-**2026-10-17：USB M0、任务 3–5 已完成。** 已提供桌面基础、时间驱动轨迹引擎、USB 定位执行器与独立读取通道；完整会话控制和界面待后续任务。任务 5 复验结束时模拟已关闭、本次临时文件已清理，此处不表示手机当前状态。
+**2026-10-18：USB M0、任务 3–6 已完成。** 已提供桌面基础、时间驱动轨迹引擎、USB 定位执行器、独立读取通道及会话状态／日志／恢复判定；本地控制服务和界面待任务 7。任务 5 已合并到 main；任务 6 在当前目录的开发分支完成，本轮未操作手机。任务 5 复验结束时模拟已关闭、本次临时文件已清理，此处不表示手机当前状态。
 
 | 项目 | 结果 |
 | --- | --- |
@@ -14,7 +14,7 @@
 | 拔线继续运行 | 未证实；16.371 秒断线内无可用样本，原基线恢复有未解释偏差，详见报告 |
 | 运动世界读取／轨迹／记录 | 尚未验证；本轮没有启动或提交运动记录 |
 | 定位适配复验 | 两固定点通过；原基线恢复出现约 51 米偏差而未通过，另一次新稳定基线下的 USB 停止恢复通过，失败保留 |
-| 桌面模块 | 任务 3–5 已完成，60 个测试通过；任务 6–9 尚未开始 |
+| 桌面模块 | 任务 3–6 已完成，85 个测试通过；任务 7–9 尚未开始 |
 
 证据及拔线限制见 [M0 结果](docs/verification/m0-results.md)和[脱敏真机证据](docs/verification/evidence/2026-10-17-reader-device-probe.json)。`verifiedStandalone` 保持 false。持续 USB 是当前开发路线；工具成功或系统定位改变都不能自动证明运动世界认可记录。
 
@@ -62,7 +62,7 @@ tools/                        忽略的本机官方工具／缓存
 
 后续开发在当前项目目录从 `main` 新建 `codex/` 开发分支，不再单独创建隔离工作树；具体规则见 [AGENT.md](AGENT.md)。
 
-任务 3–5 的模块与使用见 [桌面模块说明](desktop/README.md)，验证见[任务 3 报告](docs/verification/task3-desktop-foundation.md)、[任务 4 报告](docs/verification/task4-time-driven-replay.md)及[任务 5 报告](docs/verification/task5-verified-executor.md)。在仓库根目录使用 Node 26.1.0 或更高版本：
+任务 3–6 的模块与使用见 [桌面模块说明](desktop/README.md)，验证见[任务 3 报告](docs/verification/task3-desktop-foundation.md)、[任务 4 报告](docs/verification/task4-time-driven-replay.md)、[任务 5 报告](docs/verification/task5-verified-executor.md)及[任务 6 报告](docs/verification/task6-session-journal.md)。在仓库根目录使用 Node 26.1.0 或更高版本：
 
 ```powershell
 npm ci
@@ -70,4 +70,4 @@ npm run build
 npm test
 ```
 
-当前提供基础库、轨迹引擎与定位适配器，`npm start` 的控制服务入口留待任务 7。下一项为任务 6 的会话状态、日志和恢复判定；`mobile/` 尚未建立。运动世界兼容性按任务 8 验收，手机独立运行按任务 9 单独验收。实际设备执行仍须独立检查目标、权限和恢复，不由合成测试推出。
+会话控制器在关闭后仍等待独立恢复样本；原会话基线偏差、清理失败或超时保留 recovery_required，不能换新基线覆盖失败。当前模块由调用方调度，`npm start` 的本地控制服务与界面入口留待任务 7；`mobile/` 尚未建立。运动世界兼容性按任务 8 验收，手机独立运行按任务 9 单独验收。实际设备执行仍须独立检查目标、权限和恢复，不由合成测试推出。

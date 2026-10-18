@@ -53,9 +53,9 @@
 
 G0／G1／G2 全部通过前，不开始完整产品任务 3–9。系统位置、独立读取和运动世界兼容性分别取证。当前任务 2 不触发运动记录试验；目标应用记录行为按任务 8 的实际验收范围处理。
 
-2026-10-17 当前接续点：USB M0 与任务 3–5 已完成，已有桌面基础、时间驱动轨迹引擎、USB 定位执行器及独立读取通道；下一项为任务 6 的会话状态、日志和恢复判定，当前没有完整会话控制服务或界面。自动化测试不代替真机能力证据。
+2026-10-18 当前接续点：USB M0 与任务 3–6 已完成；任务 5 已合并 main，任务 6 在当前目录的 codex/task6-session-recovery 分支实现会话状态、JSONL 日志与独立恢复判定，严格构建及 85 个测试通过，见[任务 6 报告](docs/verification/task6-session-journal.md)。下一项为任务 7 的本地控制服务和界面。任务 6 未操作手机，自动化测试不代替真机能力证据。
 
-任务 5 两固定点通过，但原基线恢复约 51 米偏差未过既定判据；另一次新稳定基线下的 USB 停止恢复通过，失败保留，详见[任务 5 报告](docs/verification/task5-verified-executor.md)。任务 6 不得把 stop.accepted 或另一个基线的通过当作原会话已恢复。M0 的拔线空档无有效样本和原基线偏差仍未解释，脱机仍未证实，见 [M0 结果](docs/verification/m0-results.md)。不重复申请系统模拟权限；hdcd 清单缺少 MOCK_LOCATION 或无 Android 选择器，不能否定已验证的 testhelper 路线。入口细节见[入口说明](prototype/probe/README.md)。
+任务 5 两固定点通过，但原基线恢复约 51 米偏差未过既定判据；另一次新稳定基线下的 USB 停止恢复通过，失败保留，详见[任务 5 报告](docs/verification/task5-verified-executor.md)。会话恢复始终对照本次启动前的原基线；stop.accepted 或另一个基线的通过不能替代原会话恢复。恢复期间继续调度 tick，断线后须重新 stop；恢复未确认前禁止新配置或启动。日志保存在忽略的 local-data 下，不提交含设备 ID／坐标的 JSONL。M0 的拔线空档无有效样本和原基线偏差仍未解释，脱机仍未证实，见 [M0 结果](docs/verification/m0-results.md)。不重复申请系统模拟权限；hdcd 清单缺少 MOCK_LOCATION 或无 Android 选择器，不能否定已验证的 testhelper 路线。入口细节见[入口说明](prototype/probe/README.md)。
 
 ## 4. 真机操作顺序
 
