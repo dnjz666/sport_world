@@ -76,15 +76,31 @@ export function createVerifiedExecutor(capabilities: Capabilities, hdc: HdcClien
       await command(['shell', 'testhelper', 'disable-location-mock'], 'Disable location mock successfully.');
     } catch (error) { return { accepted: false, errorCode: message(error) }; }
     const errors: string[] = [];
-    for (const [path, digest] of remoteFiles) {
+    const owned = [...remoteFiles];
+    // Bound command size while avoiding two USB roundtrips per historical point.
+    for (let index = 0; index < owned.length; index += 16) {
+      const batch = new Map(owned.slice(index, index + 16));
       try {
-        const result = await command(['shell', 'sha256sum', path]);
-        if (result.includes(path) && result.includes('No such file or directory')) {
-          remoteFiles.delete(path); continue;
+        const result = await command(['shell', 'sha256sum', ...batch.keys()]);
+        const verified = new Map<string, string | null>();
+        for (const line of result.split(/\r?\n/)) {
+          const digest = /^([a-f0-9]{64})  (.+)$/.exec(line);
+          const missing = /^sha256sum: (.+): No such file or directory$/.exec(line);
+          const path = digest?.[2] ?? missing?.[1];
+          if (!path || !batch.has(path) || verified.has(path)) throw new Error('远端摘要批次输出不完整或无法识别，保留文件');
+          verified.set(path, digest?.[1] ?? null);
         }
-        if (result !== `${digest}  ${path}`) throw new Error(`远端文件摘要不一致，保留文件: ${path}`);
-        await command(['shell', 'rm', path], '');
-        remoteFiles.delete(path);
+        if (verified.size !== batch.size) throw new Error('远端摘要批次缺少文件结果，保留文件');
+        const removable: string[] = [];
+        for (const [path, digest] of verified) {
+          if (digest === null) remoteFiles.delete(path);
+          else if (digest === batch.get(path)) removable.push(path);
+          else errors.push(`远端文件摘要不一致，保留文件: ${path}`);
+        }
+        if (removable.length) {
+          await command(['shell', 'rm', ...removable], '');
+          for (const path of removable) remoteFiles.delete(path);
+        }
       } catch (error) { errors.push(message(error)); }
     }
     if (directoryCreated && remoteFiles.size === 0) {

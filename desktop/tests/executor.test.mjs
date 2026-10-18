@@ -35,7 +35,8 @@ function fixture(t, capOverrides = {}) {
   const device = { connected: true, systemBuild: 'synthetic-build', files: new Map(), calls: [],
     phoneMs: Math.floor(Date.now() / 1000) * 1000, pid: '4242', logs: '', mockEnabled: false,
     setResult: output('Set mocked locations successfully.'), disableResult: output('Disable location mock successfully.'),
-    corruptTransfer: false, beforeSet: async () => {}, beforeMkdir: async () => {}, beforeList: async () => {} };
+    corruptTransfer: false, beforeSet: async () => {}, beforeMkdir: async () => {}, beforeList: async () => {},
+    hashResult: null, removeFailureOnce: false };
   const hdc = new HdcClient({ executable: 'synthetic-hdc.exe', run: async (_exe, args) => {
     device.calls.push([...args]);
     if (args[2] === 'list') {
@@ -59,10 +60,16 @@ function fixture(t, capOverrides = {}) {
       return output('FileTransfer finish, Size:1');
     }
     if (command[1] === 'sha256sum') {
-      const content = device.files.get(command[2]);
-      return content === undefined ? output('sha256sum: ' + command[2] + ': No such file or directory') : output(sha(content) + '  ' + command[2] + '\n');
+      const paths = command.slice(2);
+      const normal = paths.map((path) => { const content = device.files.get(path);
+        return content === undefined ? 'sha256sum: ' + path + ': No such file or directory' : sha(content) + '  ' + path; }).join('\n') + '\n';
+      return device.hashResult ? device.hashResult(paths, normal) : output(normal);
     }
-    if (command[1] === 'rm') { device.files.delete(command[2]); return output(); }
+    if (command[1] === 'rm') {
+      if (device.removeFailureOnce) { device.removeFailureOnce = false; device.files.delete(command[2]); return output('rm failed: native error 201'); }
+      for (const path of command.slice(2)) device.files.delete(path);
+      return output();
+    }
     if (command[1] === 'rmdir') return output();
     if (command[1] === 'testhelper') {
       if (command[2] === 'enable-location-mock') { device.mockEnabled = true; return output('Enable location mock successfully.'); }
@@ -266,6 +273,60 @@ test('cleanup_failure_is_preserved_and_retryable', async (t) => {
   device.disableResult = output('Disable location mock successfully.');
   assert.equal((await executor.stop()).accepted, true);
   assert.equal(device.files.size, 0);
+});
+
+test('large_session_stop_cleans_owned_files_with_bounded_native_roundtrips', async (t) => {
+  const { executor, device } = fixture(t);
+  await executor.prepare(context);
+  for (let sequence = 1; sequence <= 80; sequence++) assert.equal((await executor.send({ ...sample, sequence })).accepted, true);
+  const before = device.calls.length;
+  assert.equal((await executor.stop()).accepted, true);
+  assert.equal(device.mockEnabled, false);
+  assert.equal(device.files.size, 0);
+  const native = device.calls.slice(before).filter((args) => args[4] === 'shell');
+  assert.ok(native.length <= 16, `80-point cleanup used ${native.length} native roundtrips`);
+  assert.equal(native[0][6], 'disable-location-mock');
+});
+
+test('batched_stop_preserves_changed_file_and_cleans_other_owned_files', async (t) => {
+  const { executor, device } = fixture(t);
+  await executor.prepare(context);
+  for (let sequence = 1; sequence <= 20; sequence++) await executor.send({ ...sample, sequence });
+  const [changed, original] = [...device.files][7]; device.files.set(changed, 'external replacement');
+  const receipt = await executor.stop();
+  assert.equal(receipt.accepted, false);
+  assert.match(receipt.errorCode, /摘要/);
+  assert.deepEqual([...device.files.keys()], [changed]);
+  assert.equal(device.files.get(changed), 'external replacement');
+  device.files.set(changed, original);
+  assert.equal((await executor.stop()).accepted, true);
+  assert.equal(device.files.size, 0);
+});
+
+test('batched_stop_handles_absent_file_and_retries_partial_remove_failure', async (t) => {
+  const { executor, device } = fixture(t);
+  await executor.prepare(context);
+  for (let sequence = 1; sequence <= 4; sequence++) await executor.send({ ...sample, sequence });
+  device.files.delete([...device.files.keys()][1]);
+  device.removeFailureOnce = true;
+  assert.equal((await executor.stop()).accepted, false);
+  assert.equal(device.mockEnabled, false);
+  assert.equal((await executor.stop()).accepted, true);
+  assert.equal(device.files.size, 0);
+});
+
+test('unrecognized_batch_hash_output_cannot_authorize_any_deletion', async (t) => {
+  const { executor, device } = fixture(t);
+  await executor.prepare(context);
+  for (let sequence = 1; sequence <= 3; sequence++) await executor.send({ ...sample, sequence });
+  const owned = new Map(device.files);
+  device.hashResult = (_paths, normal) => output(normal + sha('unowned') + '  /data/local/tmp/unowned.gpx\n');
+  const before = device.calls.length;
+  assert.equal((await executor.stop()).accepted, false);
+  assert.deepEqual(device.files, owned);
+  assert.equal(device.calls.slice(before).some((args) => args[5] === 'rm'), false);
+  device.hashResult = null;
+  assert.equal((await executor.stop()).accepted, true);
 });
 
 test('stop_serializes_after_inflight_send_and_blocks_later_sends', async (t) => {

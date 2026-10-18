@@ -1,0 +1,312 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-18T12:06:58.698Z",
+  "status": "in_progress_not_accepted",
+  "device": {
+    "model": "SGT-AL50",
+    "systemBuild": "7.0.0.109(SP6C00E105R3P3)",
+    "api": 26,
+    "targetIdRedacted": true
+  },
+  "targetApp": {
+    "bundleName": "com.zjwh.hm_wh_physicalfitness",
+    "version": "7.3.92"
+  },
+  "verifiedStandalone": false,
+  "verification": {
+    "strictDesktopBuildExitCode": 0,
+    "fullTests": 128,
+    "failedTests": 0,
+    "readerBoundaryTests": 9,
+    "signedReaderBuildExitCode": 0,
+    "independentReview": "one_important_unsubscribe_restart_issue_reproduced_RED_then_fixed_and_full_suite_passed",
+    "olderOsRuntimeVerified": false
+  },
+  "normalTargetApp": {
+    "successfulCallbackCount": 21,
+    "providers": [
+      "network"
+    ],
+    "coordinateSystems": [
+      "GCJ02"
+    ],
+    "errorCodes": [
+      0
+    ],
+    "accuracyRangeM": [
+      14.8,
+      20.5
+    ],
+    "preciseCoordinatesOrAddressPublished": false,
+    "normalStageOperatorReport": "Map correct; starting a run reports weak signal.",
+    "outdoorOperatorReport": "Map correct; run can be started.",
+    "outdoorIndependentGnssProofRetrieved": false,
+    "rawWgs84VersusGcj02DistanceCompared": false
+  },
+  "initialSinglePointPreflightAttempt": {
+    "mockEnabled": false,
+    "applicationNotCreated": true,
+    "failedBeforeInjection": true,
+    "reason": "Five fresh stable baseline samples unavailable",
+    "baselineCollectionTimeoutMs": 35000,
+    "ownedDirectoryIndependentlyAbsent": true
+  },
+  "reader": {
+    "version": "1.1.0",
+    "installedInitialDiagnosticBuild": true,
+    "normalModes": [
+      {
+        "mode": "accuracy",
+        "locations": 3,
+        "sources": [
+          2
+        ],
+        "intervalsMs": [
+          15434,
+          19108
+        ],
+        "nativeSpeedsMps": [
+          0,
+          0,
+          0
+        ],
+        "nativeDirectionsDeg": [
+          0,
+          0,
+          0
+        ],
+        "mockMarkers": [
+          null
+        ],
+        "satelliteEvents": 41,
+        "maxReportedSatellites": 47,
+        "strongestCarrierToNoise": 31,
+        "locationErrors": [],
+        "unavailable": []
+      },
+      {
+        "mode": "trajectory",
+        "locations": 3,
+        "sources": [
+          2
+        ],
+        "intervalsMs": [
+          12221,
+          20031
+        ],
+        "nativeSpeedsMps": [
+          0,
+          0,
+          0
+        ],
+        "nativeDirectionsDeg": [
+          0,
+          0,
+          0
+        ],
+        "mockMarkers": [
+          null
+        ],
+        "satelliteEvents": 40,
+        "maxReportedSatellites": 47,
+        "strongestCarrierToNoise": 31,
+        "locationErrors": [],
+        "unavailable": []
+      },
+      {
+        "mode": "low-power",
+        "locations": 2,
+        "sources": [
+          2
+        ],
+        "intervalsMs": [
+          93
+        ],
+        "nativeSpeedsMps": [
+          0,
+          0
+        ],
+        "nativeDirectionsDeg": [
+          0,
+          0
+        ],
+        "mockMarkers": [
+          null
+        ],
+        "satelliteEvents": 24,
+        "maxReportedSatellites": 47,
+        "strongestCarrierToNoise": 31,
+        "locationErrors": [],
+        "unavailable": []
+      }
+    ],
+    "finalMode": "accuracy",
+    "originalM0ReaderVersion": "1.0.0",
+    "originalM0HashesPreserved": true,
+    "finalSignedBuild": {
+      "bytes": 92541,
+      "sha256": "4f201df0cf8416f6e726c776b9d92a00e4c11ad9e7a44f3e21282df56b91ac56",
+      "lifecycleFixInstalled": false
+    }
+  },
+  "cleanupBenchmark": {
+    "mockEnabled": false,
+    "files": 80,
+    "removed": 80,
+    "cleanupCommands": 11,
+    "cleanupElapsedMs": 3296,
+    "independentlyAbsent": true,
+    "errors": [],
+    "isFullProcessExitRecoveryTest": false
+  },
+  "transportComparisons": [
+    {
+      "mode": "single",
+      "scope": "transport_diagnostic_not_controller_acceptance",
+      "baselineMaxCollectionMs": 125000,
+      "independentMockSamples": 12,
+      "maxIndependentErrorM": 0.0004977905529830383,
+      "disableAccepted": true,
+      "recoveryWithin45Sec": false,
+      "recoveryFirstWindowSamples": 2,
+      "followupRecoveryConfirmed": true,
+      "followupSamples": 3,
+      "followupObservationElapsedMs": 64024,
+      "ownedDirectoriesIndependentlyAbsent": 2,
+      "operatorObservation": "Map did not move to test position; location unavailable.",
+      "harnessReturnAcknowledgedBeforeDeadline": false
+    },
+    {
+      "mode": "continuous",
+      "scope": "transport_diagnostic_not_controller_acceptance",
+      "baselineMaxCollectionMs": 125000,
+      "independentMockSamples": 15,
+      "maxIndependentErrorM": 0.0003514122980644337,
+      "disableAccepted": true,
+      "recoveryWithin45Sec": false,
+      "recoveryFirstWindowSamples": 2,
+      "followupRecoveryConfirmed": true,
+      "followupSamples": 3,
+      "followupObservationElapsedMs": 55500,
+      "ownedDirectoriesIndependentlyAbsent": 2,
+      "operatorObservation": "pending",
+      "harnessReturnAcknowledgedBeforeDeadline": false
+    }
+  ],
+  "continuousNativeMetadata": {
+    "matchedSamples": 20,
+    "sourceCode": 1,
+    "accuracyM": 10,
+    "speedMps": 0,
+    "directionDeg": 0,
+    "isFromMock": null,
+    "bootClockAdvanced": true,
+    "positionAgeUnder1Sec": true,
+    "rawValuesNotReplacedWithDerivedValues": true,
+    "causeOfTargetFailureEstablished": false
+  },
+  "preservedFailures": [
+    "Historical target-app mock phase showed location failure.",
+    "Historical SIGINT process still stopping at60s; separate manual recovery does not replace that failure.",
+    "Historical M0 USB-gap original-baseline107m and Task5 original-baseline51m failures remain unchanged."
+  ],
+  "incomplete": [
+    "Continuous-GPX target-app operator result.",
+    "Resolve target-app compatibility; native position receipt alone is not success.",
+    "Complete process-exit recovery repeat.",
+    "Surveyed sports-track route and track/record validity."
+  ],
+  "privateEvidence": [
+    {
+      "label": "normal",
+      "privateDirectory": "local-data/compat-normal-c78435b80f594641aec4f270ceb3cf36",
+      "sha256": {
+        "summary.json": "f8a3a69decf749b5e986ac0eb9685339edd2bc88851af189097e579c2e0c2b91",
+        "native.jsonl": "7306cbf94737d36a0c9b007f40750ee0af59b0d47320e90b1d69729d5dcfaf44",
+        "target-callback-metadata.json": "55e81c1a37929ab6ebf41b6760c9431ba6f46ba71b6e2959162ae24417ba1638"
+      }
+    },
+    {
+      "label": "baseline",
+      "privateDirectory": "local-data/task8-016a434562514618bec0667d94ffcdcd",
+      "sha256": {
+        "summary.json": "149faaa33624a0113ae418810fa09799bdfec96676d1a5ef41e53a34ec343b86",
+        "commands.jsonl": "c50ce685945fbc283124f606254380c71b12d162222a782dc592da1023b4f007",
+        "remote-cleanup-audit.json": "9a9a2aec6465f7f8e04d7b6ffb5936c9d80f9f76acc91c51cd1f3082026e67a7"
+      }
+    },
+    {
+      "label": "reader",
+      "privateDirectory": "local-data/task8-55055d5dc3eb458b9af4c1a0e5d43d9e",
+      "sha256": {
+        "summary.json": "62d9f932579174420be64bb13b5bbb211379da71d4bb8f4a5519ae5b88dba64b",
+        "commands.jsonl": "ca91a5b828e986695b1ad22d312fb51d4a8e33cb4315e61c255be5752a24748b",
+        "accuracy-diagnostics.json": "9315cd314d54929750c5dc961cd9c69de6287b498133b5dbf41d7f53ee423d2b",
+        "trajectory-diagnostics.json": "ed4a6db832b8d6e9f7d9a669d9989be5301685dc6f11c7ea3427b1594315da84",
+        "low-power-diagnostics.json": "9bc52558fdaafcc6d2a461a0da9d069c2d47db21a0d3a63fcc4253602687c863",
+        "remote-cleanup-audit.json": "8806345bc6644feefee8ac2b9acdb9f3a0b05864037c738d722cb76a9039af37"
+      }
+    },
+    {
+      "label": "benchmark",
+      "privateDirectory": "local-data/cleanup-benchmark-06efac7fb7b346af87575c60cc24300c",
+      "sha256": {
+        "summary.json": "0e14f5a5b9074dd4e144aee521c3bdea5c3e63c1f5062e3daee41ef672969d59",
+        "commands.jsonl": "bddb730990965a2b97b6d64b96247ddd964edc89f49d2e0d233159c10a77bb89"
+      }
+    },
+    {
+      "label": "readerReturn",
+      "privateDirectory": "local-data/task8-a659398140384fe1b52481bc241c5fb0",
+      "sha256": {
+        "summary.json": "c2c6af0f4b67afacece94d46d1c631168e5bebbac212a87893fa39b25c25eea0",
+        "commands.jsonl": "b3cc1504bda95463b23fe24881948d5e7057ffcf64de3fa2e15f72ee31cd1691",
+        "remote-cleanup-audit.json": "24fea2d5a01be457d0fa5ce25fd719f921de22108f2ca644c47c66851ed89c1b",
+        "reader-return-logs.json": "6216be512b99dd6db5dd4d7a56fb988d39848014693e19b80eb5daf0810da16e"
+      }
+    },
+    {
+      "label": "singleTransport",
+      "privateDirectory": "local-data/task8-027c1b6b8c3d44e1abbc0579d2a95e6b",
+      "sha256": {
+        "summary.json": "746bd37064a8a6af1f8a6fadb6a9f61e13c78ecafa41f657ec7b654f30dece35",
+        "commands.jsonl": "e6e3c8bdc20fee5653329445bd53144fdfe46d40cd3af19daf0eeba8ff79f0f5",
+        "remote-cleanup-audit.json": "3ffac64fd86fcea2789bf86b78c3f23372b58eb8a8098e956f185fe71a61230a",
+        "independent-reader-phase.json": "1d7709a01b9bec9d5b023b2270983bd89d6deb2eed28def1f79f5fc674dbfd13",
+        "single-submissions.jsonl": "eae448ed9dffe308de701f04955ecf7b309cddc519292eed50489c94ae5880da",
+        "original-baseline-recovery.json": "d4ca3352b7c9cbe031e6a7bbffe58b051d038b8edc3a3131fb28aca23f37dfea",
+        "executor-stop.json": "47b9a26f0fd5512df615f2e0d43e7678a48b607239b13d1cbcad2895cc35ced3"
+      }
+    },
+    {
+      "label": "singleTargetLogs",
+      "privateDirectory": "local-data/compat-single-8ad6db0415964171bfbd0eae6fd62348",
+      "sha256": {
+        "summary.json": "072e3fe2b57388af045029fb320c956d3df531b74a0840f6427e62db369f324c",
+        "native.jsonl": "b8220e9d2b0e1ac0729dc6c794453f9278200fc1786e7edbfce28ef2ff2bec84",
+        "target-callback-metadata.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      }
+    },
+    {
+      "label": "continuousTransport",
+      "privateDirectory": "local-data/task8-50da1edaacd54188b61d2f62ee4c224b",
+      "sha256": {
+        "summary.json": "02e637cc077225e6fe468e5d305b78b8131ee29d0000ed09cffaa1f46f20bfeb",
+        "commands.jsonl": "759888cd4139418f2c7605237b0829834ca9a9b1f77f8df51cf334b56e96a8f7",
+        "remote-cleanup-audit.json": "f580fb86c925e6e344f4e783a45afb0cd44689865f39b26ba3824b177b8696d6",
+        "independent-reader-phase.json": "4c60d3a3876abd5078ffcc1290ef04dd14262096124aaaf082e8cc3b64fa21f2",
+        "reader-native-metadata.json": "915086f8400aedea5f201c4d6500ac06a636f3278df0f3449727023373747b11",
+        "original-baseline-recovery.json": "7d97d107600db468bb94184315345bc52918b351f649042deaf2eb2b8235f7ca"
+      }
+    },
+    {
+      "label": "continuousTargetLogs",
+      "privateDirectory": "local-data/compat-continuous-56395e5194b74048bb5dc1d516bd45f4",
+      "sha256": {
+        "summary.json": "4072c5299e0a719292103763c0bad2d4ab179b091a9cbcd923f5fec398d5b38d",
+        "native.jsonl": "75534171dddfc5b3c14d21692054c49d01fd4accb024e6d7f6ec71f69980b2f6",
+        "target-callback-metadata.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      }
+    }
+  ]
+}
