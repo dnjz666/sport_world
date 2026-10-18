@@ -17,8 +17,8 @@ function fixture(capabilityOverrides = {}) {
   const time = { monotonic: 1000, epoch: 1800000000000, phone: 1850000000000 };
   const device = { connected: true, build: 'synthetic-build', stopAccepted: true, observationMode: 'normal',
     observedPoint: { latitude: 0.01, longitude: 0.01 }, cached: null, lastObservation: null,
-    observeGate: null, sendGate: null, prepareGate: null, stopGate: null,
-    sends: [], prepares: [], stops: 0, events: [], failLogKind: null, sendReceipt: null, observationDelayMs: 0 };
+    observeGate: null, sendGate: null, prepareGate: null, stopGate: null, targetGate: null,
+    sends: [], prepares: [], stops: 0, events: [], failLogKind: null, sendReceipt: null, observationDelayMs: 0, observationStepMs: 1000 };
   const clock = { monotonicMs: () => time.monotonic, epochMs: () => time.epoch };
   const advance = (ms) => { time.monotonic += ms; time.epoch += ms; time.phone += ms; };
   const capabilities = { canInject: true, executionHost: 'desktop', verifiedStandalone: false, targetId: 'phone-a',
@@ -26,7 +26,7 @@ function fixture(capabilityOverrides = {}) {
   const observer = { latest: async () => {
     if (device.observationMode === 'none') { time.monotonic += 10000; return null; }
     if (device.observationMode === 'cached') return structuredClone(device.cached);
-    time.phone += 1000;
+    time.phone += device.observationStepMs;
     const sample = { ...device.observedPoint, epochMs: time.phone, receivedAtMs: time.phone,
       accuracyM: device.observationMode === 'bad_accuracy' ? 51 : 5, source: null,
       isMock: device.observationMode === 'mock' ? true : null };
@@ -58,8 +58,10 @@ function fixture(capabilityOverrides = {}) {
     device.events.push(structuredClone(event));
   } };
   const hdc = new HdcClient({ executable: 'synthetic-hdc', run: async (_exe, args) => {
+    const gate = device.targetGate; device.targetGate = null;
+    if (gate) { gate.entered.resolve(); await gate.release.promise; }
     const stdout = args[2] === 'list' ? (device.connected ? 'phone-a USB Connected localhost hdc' : 'phone-b USB Connected localhost hdc') :
-      args.includes('date') ? String(Math.floor(time.phone / 1000)) : device.build;
+      args.includes('date') ? (args.includes('+%s%3N') ? String(time.phone) : String(Math.floor(time.phone / 1000))) : device.build;
     return { exitCode: 0, stdout, stderr: '' };
   } });
   const route = structuredClone(track);
@@ -89,9 +91,11 @@ test('normal_controls_match_output', async () => {
   await controller.dispatch({ type: 'resume' });
   advance(30000); await controller.tick();
   assert.equal(controller.snapshot().expected.elapsedMs, 60000);
+  device.observedPoint = { latitude: 0, longitude: 0 }; // Independent endpoint callback.
   advance(1000000); await controller.tick();
   assert.equal(controller.snapshot().state, 'recovery_required');
   near(controller.snapshot().distanceM, compileRoute(route).lengthM * 2);
+  device.observedPoint = { latitude: 0.01, longitude: 0.01 };
   assert.equal((await recover()).state, 'stopped');
   assert.equal(device.stops, 2);
   const count = device.sends.length;
@@ -116,6 +120,107 @@ test('disconnect_enters_recovery_required', async () => {
   await assert.rejects(() => controller.dispatch({ type: 'start' }), { code: 'RECOVERY_REQUIRED' });
   await controller.dispatch({ type: 'stop' });
   assert.equal((await recover()).state, 'stopped');
+});
+
+test('auto_finish_waits_for_a_fresh_independent_endpoint_before_cleanup', async () => {
+  const { controller, device, advance, start } = fixture();
+  await start(); await controller.tick();
+  advance(1000000); await controller.tick();
+  assert.equal(controller.snapshot().state, 'running');
+  assert.equal(controller.snapshot().expected.speedMps, 0);
+  assert.equal(device.stops, 1);
+  const submissions = device.sends.length;
+  device.observedPoint = { latitude: 0, longitude: 0.000054 }; // Six metres short.
+  advance(1000); await controller.tick();
+  assert.equal(device.stops, 1);
+  assert.equal(device.sends.length, submissions);
+  device.observedPoint = { latitude: 0, longitude: 0 };
+  advance(1000); await controller.tick();
+  assert.equal(controller.snapshot().state, 'recovery_required');
+  assert.equal(device.stops, 2);
+  assert.ok(device.events.some((event) => event.kind === 'terminal_observation' && event.data.confirmed));
+});
+
+test('cached_endpoint_before_terminal_submission_does_not_confirm_finish', async () => {
+  const { controller, device, advance, start } = fixture();
+  await start();
+  device.observedPoint = { latitude: 0, longitude: 0 };
+  await controller.tick();
+  device.cached = structuredClone(device.lastObservation); device.observationMode = 'cached';
+  advance(1000000); await controller.tick();
+  assert.equal(controller.snapshot().state, 'running');
+  assert.equal(device.stops, 1);
+});
+
+test('missing_terminal_observation_times_out_and_still_cleans_up', async () => {
+  const { controller, device, advance, start, recover } = fixture();
+  await start(); advance(1000000); await controller.tick();
+  assert.equal(controller.snapshot().state, 'running');
+  advance(16000); await controller.tick();
+  assert.equal(controller.snapshot().state, 'recovery_required');
+  assert.equal(device.stops, 2);
+  assert.ok(device.events.some((event) => event.kind === 'terminal_observation' && event.data.confirmed === false));
+  assert.equal((await recover()).state, 'stopped'); // Recovery is separate from route completion.
+  assert.ok(device.events.some((event) => event.kind === 'fault' && event.data.error.code === 'TERMINAL_OBSERVATION_TIMEOUT'));
+});
+
+test('terminal_observation_crossing_deadline_cannot_confirm_finish', async () => {
+  const { controller, device, advance, start } = fixture();
+  await start(); advance(1000000); await controller.tick();
+  assert.equal(controller.snapshot().state, 'running');
+  device.observedPoint = { latitude: 0, longitude: 0 };
+  advance(14000);
+  const gate = { entered: deferred(), release: deferred() }; device.observeGate = gate;
+  const pending = controller.tick(); await gate.entered.promise;
+  advance(2000); gate.release.resolve(); await pending;
+  assert.equal(controller.snapshot().state, 'recovery_required');
+  assert.equal(device.events.some((event) => event.kind === 'terminal_observation' && event.data.confirmed), false);
+});
+
+test('manual_stop_cancels_pending_terminal_observation_without_waiting', async () => {
+  const { controller, device, advance, start } = fixture();
+  await start(); advance(1000000); await controller.tick();
+  assert.equal(device.stops, 1);
+  await assert.rejects(() => controller.dispatch({ type: 'pause' }), { code: 'TERMINAL_PENDING' });
+  const gate = { entered: deferred(), release: deferred() }; device.observeGate = gate;
+  const pending = controller.tick(); await gate.entered.promise;
+  await controller.dispatch({ type: 'stop' });
+  assert.equal(device.stops, 2);
+  const snapshot = controller.snapshot(); gate.release.resolve(); await pending;
+  assert.deepEqual(controller.snapshot(), snapshot);
+});
+
+test('same_second_fresh_endpoint_callback_confirms_finish', async () => {
+  const { controller, device, advance, start, time } = fixture();
+  await start();
+  time.phone = 1850000005500;
+  device.observationStepMs = 100;
+  device.observedPoint = { latitude: 0, longitude: 0 };
+  advance(1000000); await controller.tick();
+  assert.equal(controller.snapshot().state, 'recovery_required');
+  assert.ok(device.events.some((event) => event.kind === 'terminal_observation' && event.data.confirmed));
+});
+
+test('blocked_terminal_observer_cannot_prevent_cleanup_at_deadline', { timeout: 20000 }, async () => {
+  const { controller, device, advance, start } = fixture();
+  await start(); advance(1000000); await controller.tick();
+  const gate = { entered: deferred(), release: deferred() }; device.observeGate = gate;
+  const pending = controller.tick(); await gate.entered.promise;
+  advance(16000);
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 15500));
+    assert.equal(controller.snapshot().state, 'recovery_required');
+    assert.equal(device.stops, 2);
+  } finally { gate.release.resolve(); await pending; }
+});
+
+test('expired_terminal_dispatches_cleanup_before_another_usb_query', async () => {
+  const { controller, device, advance, start } = fixture();
+  await start(); advance(1000000); await controller.tick();
+  const gate = { entered: deferred(), release: deferred() }; device.targetGate = gate;
+  advance(16000); const pending = controller.tick(); await gate.entered.promise;
+  try { assert.equal(device.stops, 2); }
+  finally { gate.release.resolve(); await pending; }
 });
 
 test('cleanup_failure_never_marks_stopped', async () => {

@@ -23,6 +23,7 @@ export interface SessionDependencies {
 interface Fault { code: string; message: string }
 const recoveryCriteria = { timeoutMs: 45000, requiredSamples: 3, maxAccuracyM: 50, maxBaselineDistanceM: 50,
   minInjectedDistanceM: 100, maxTimestampDeltaMs: 5000 } as const;
+const terminalCriteria = { timeoutMs: 15000, maxDistanceM: 5 } as const;
 function failure(code: string, message: string): Error & Fault { return Object.assign(new Error(message), { code }); }
 function fault(error: unknown, code: string): Fault {
   return { code: typeof (error as Fault)?.code === 'string' ? (error as Fault).code : code,
@@ -58,6 +59,7 @@ export class SessionController {
   private recoverySamples = new Set<string>();
   private journalFailed = false;
   private lastSampleAt = -Infinity;
+  private terminal: { sample: Sample; fence: number; since: number } | undefined;
 
   constructor(dependencies: SessionDependencies) {
     this.dependencies = { ...dependencies, capabilities: { ...dependencies.capabilities } };
@@ -95,11 +97,11 @@ export class SessionController {
     if (this.journalFailed) throw failure('JOURNAL_WRITE_FAILED', '日志不可用，请修复日志并重新建立控制器');
   }
 
-  private async deviceTime(): Promise<number> {
-    const result = await this.dependencies.hdc.runTarget(this.config!.targetId, ['shell', 'date', '+%s'], { signal: AbortSignal.timeout(15000) });
+  private async deviceTime(precise = false): Promise<number> {
+    const result = await this.dependencies.hdc.runTarget(this.config!.targetId, ['shell', 'date', precise ? '+%s%3N' : '+%s'], { signal: AbortSignal.timeout(15000) });
     const text = result.stdout.trim();
-    const value = Number(text) * 1000;
-    if (result.exitCode || result.stderr.trim() || !/^\d+$/.test(text) || !Number.isSafeInteger(value) || value <= 0) {
+    const value = Number(text) * (precise ? 1 : 1000);
+    if (result.exitCode || result.stderr.trim() || !(precise ? /^\d{13}$/ : /^\d+$/).test(text) || !Number.isSafeInteger(value) || value <= 0) {
       throw failure('DEVICE_TIME_UNAVAILABLE', '无法核实设备上的采样时间');
     }
     return value;
@@ -169,6 +171,7 @@ export class SessionController {
     if (command.type === 'start') return this.start();
     if (command.type === 'pause' || command.type === 'resume') {
       if (this.view.state !== 'running' && this.view.state !== 'paused') throw failure('INVALID_STATE', '仅运行中的会话可以暂停或继续');
+      if (this.terminal) throw failure('TERMINAL_PENDING', '正在等待独立终点回调，可直接停止');
       if (command.type === 'pause') { this.replay!.pause(); this.view.state = 'paused'; }
       else { this.replay!.resume(); this.view.state = 'running'; }
       try { await this.record('state', { state: this.view.state }); }
@@ -189,7 +192,7 @@ export class SessionController {
     }
     const token = ++this.generation;
     this.startToken = token;
-    this.baseline = undefined; this.injected = []; this.mayHaveInjected = false; this.cleanupAccepted = false;
+    this.baseline = undefined; this.injected = []; this.mayHaveInjected = false; this.cleanupAccepted = false; this.terminal = undefined;
     try {
       await this.record('start_requested', { mode: this.config.mode });
       const build = await this.dependencies.hdc.runTarget(this.config.targetId, ['shell', 'param', 'get', 'const.product.software.version'], { signal: AbortSignal.timeout(15000) });
@@ -238,6 +241,7 @@ export class SessionController {
     if (!this.config || this.view.state === 'stopped') return Promise.resolve(this.snapshot());
     const token = ++this.generation;
     this.startToken = undefined;
+    this.terminal = undefined;
     this.view.state = 'stopping';
     const pendingPreparation = this.preparation;
     const work = (async (): Promise<SessionSnapshot> => {
@@ -309,9 +313,32 @@ export class SessionController {
     return promise;
   }
 
+  private async pollTerminal(token: number): Promise<void> {
+    const terminal = this.terminal!;
+    const remainingMs = terminalCriteria.timeoutMs - (this.dependencies.clock.monotonicMs() - terminal.since);
+    let timedOut = remainingMs <= 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let observed: ObservedLocation | null;
+    try {
+      observed = timedOut ? null : await Promise.race([this.observation(token, terminal.fence),
+        new Promise<null>((resolve) => { timer = setTimeout(() => { timedOut = true; resolve(null); }, remainingMs); })]);
+    } finally { clearTimeout(timer); }
+    const expired = (): boolean => timedOut || this.dependencies.clock.monotonicMs() - terminal.since >= terminalCriteria.timeoutMs;
+    if (!this.current(token)) return;
+    const distanceM = observed ? distanceMeters(observed, terminal.sample) : null;
+    if (!expired() && (distanceM === null || distanceM > terminalCriteria.maxDistanceM)) return;
+    const confirmed = !expired();
+    await this.record('terminal_observation', { confirmed, sample: terminal.sample, observed, distanceM, criteria: terminalCriteria });
+    if (!this.current(token)) return;
+    if (!confirmed) throw failure('TERMINAL_OBSERVATION_TIMEOUT', '独立终点回调未在时限内确认；仍执行关闭和原基线恢复检查');
+    await this.beginStop();
+  }
+
   private async runTick(token: number): Promise<void> {
     if (!['running', 'paused', 'recovery_required'].includes(this.view.state)) return;
     try {
+      // The terminal deadline covers all independent-channel USB reads as well.
+      if (this.terminal) { this.checkCapability(); await this.pollTerminal(token); return; }
       await this.dependencies.hdc.requireTarget(this.config!.targetId, { signal: AbortSignal.timeout(15000) });
       if (!this.current(token)) return;
       if (this.view.state === 'recovery_required') { await this.pollRecovery(token); return; }
@@ -327,6 +354,8 @@ export class SessionController {
         await this.record('expected', { sample });
         if (!this.current(token)) return;
         this.injected.push({ latitude: sample.latitude, longitude: sample.longitude });
+        const terminalFence = this.replay!.finished() ? await this.deviceTime(true) + 1 : 0;
+        if (!this.current(token)) return;
         const receipt = await this.dependencies.executor.send(sample);
         if (!this.current(token)) return;
         if (receipt.sessionId !== this.view.sessionId || receipt.sequence !== sample.sequence) {
@@ -336,7 +365,12 @@ export class SessionController {
         await this.record('sent', { sample, receipt });
         if (!this.current(token)) return;
         if (!receipt.accepted) throw failure('INJECTION_FAILED', receipt.errorCode ?? '定位样本发送未接受');
-        if (this.replay!.finished()) { await this.beginStop(); return; }
+        if (this.replay!.finished()) {
+          this.terminal = { sample, fence: terminalFence, since: this.dependencies.clock.monotonicMs() };
+          await this.record('terminal_pending', { sample, fenceEpochMs: terminalFence, criteria: terminalCriteria });
+          if (this.current(token)) await this.pollTerminal(token);
+          return;
+        }
       }
       await this.observation(token, this.observationFence);
     } catch (error) {

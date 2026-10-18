@@ -1,0 +1,363 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-18T06:48:59.170Z",
+  "status": "task8_partial_not_accepted",
+  "device": {
+    "model": "SGT-AL50",
+    "systemBuild": "7.0.0.109(SP6C00E105R3P3)",
+    "api": 26,
+    "targetIdRedacted": true
+  },
+  "tools": {
+    "hdc": "3.2.0d",
+    "testhelper": "1.0.1",
+    "reader": "1.0.0",
+    "capabilityEvidenceExpiresAt": "2027-10-17T09:08:52.000Z",
+    "expirySource": "reader_application_Profile_conservative_bound",
+    "testhelperAuthorizationExpiryVerified": false
+  },
+  "routeScope": "user_selected_closed_usb_control_route_not_surveyed_sports_track",
+  "verifiedStandalone": false,
+  "verification": {
+    "strictBuildExitCode": 0,
+    "fullTests": 115,
+    "failedTests": 0,
+    "independentReview": "terminal_P2_findings_reproduced_and_fixed"
+  },
+  "runs": [
+    {
+      "label": "initial-full-route-terminal-not-observed",
+      "startedAt": "2026-10-18T06:00:37.097Z",
+      "endedAt": "2026-10-18T06:05:32.809Z",
+      "lifecycleCompleted": true,
+      "finalState": "stopped",
+      "routeLengthM": 199.99365631666217,
+      "settings": {
+        "paceSecPerKm": 300,
+        "laps": 2,
+        "direction": "reverse",
+        "sampleIntervalMs": 1000
+      },
+      "interrupted": false,
+      "uiFilesRemoved": true,
+      "auditedOwnedDirectories": 2,
+      "independentlyAbsentDirectories": 2,
+      "measurements": {
+        "independentSamples": 54,
+        "matchedSubmittedSamples": 54,
+        "maxNearestSubmittedErrorM": 0.000565863637761463,
+        "reverseDirectionBackstepsOver1M": 0,
+        "observedForwardProgressM": 392.7594109912187,
+        "observedEndDistanceFromStartM": 6.427990212114317,
+        "endWindowMockSamples": [
+          {
+            "relativeToDisableStartMs": -3225,
+            "distanceFromStartM": 6.427990212114317
+          }
+        ],
+        "measuredMeanPaceSecPerKm": 300.43837702628144,
+        "pause": {
+          "heldElapsedUnchanged": true,
+          "heldDistanceUnchanged": true,
+          "independentSamples": 16,
+          "maxDistanceFromHeldPositionM": 0.0002524685086827925
+        },
+        "terminalSample": {
+          "elapsedMs": 119996.1937899973,
+          "speedMps": 0,
+          "distanceFromStartM": 0
+        },
+        "controllerFinalState": "stopped",
+        "recoveryEvents": [
+          {
+            "confirmed": true,
+            "samples": 3
+          }
+        ],
+        "effectiveSubmittedSamples": 53,
+        "rawUniqueReaderSamples": 122,
+        "note": "Nearest submitted error is digital coordinate agreement. Mean pace uses independently projected reverse rectangle progress and device callback time; not native speed."
+      },
+      "privateEvidenceSha256": {
+        "summary.json": "9aad63602ed18740fe9588786bf6b65b1379547e5e91127aa38eeb24f0738d1c",
+        "commands.jsonl": "954238d51297ce9771008e56fb7021b72a288b9b82b400ac29de2abf0083c71a",
+        "session-0.jsonl": "04799456cdc5789c4c8318d254a957e80172078e5d66a977358903d50c3f0942",
+        "remote-cleanup-audit.json": "cbd277181e024d36fa526f1090e6209eeab21b6361f002e9dd9cc451b0715321",
+        "analysis.json": "d2ecae071f5c92cadc96d150e8af482e7ef17d5ac8b1358e66fd2497b8dbddad"
+      }
+    },
+    {
+      "label": "manual-stop",
+      "startedAt": "2026-10-18T06:06:43.541Z",
+      "endedAt": "2026-10-18T06:07:47.626Z",
+      "lifecycleCompleted": true,
+      "finalState": "stopped",
+      "routeLengthM": 199.99365632892074,
+      "settings": {
+        "paceSecPerKm": 300,
+        "laps": 2,
+        "direction": "reverse",
+        "sampleIntervalMs": 1000
+      },
+      "interrupted": false,
+      "uiFilesRemoved": true,
+      "auditedOwnedDirectories": 2,
+      "independentlyAbsentDirectories": 2,
+      "privateEvidenceSha256": {
+        "summary.json": "1faa88e482d729cd19b0a776b3e92d3f17821ba3a1991a00f69558031d4ddec5",
+        "commands.jsonl": "42340467bfaaf66f1b2762fdfe0f3c608212eb0e802740a1c0cfbbf504c8b7cb",
+        "session-0.jsonl": "5d573ad1040a464ab34fefd0622a3a1596fb7f77ce50eae967c5f70136a15453",
+        "remote-cleanup-audit.json": "a93d5896590aa373cd760748479a367eb0ce6aaa9d4cf83172a93c3f3437c1f0"
+      }
+    },
+    {
+      "label": "unstable-preflight-no-enable",
+      "startedAt": "2026-10-18T06:13:23.232Z",
+      "endedAt": "2026-10-18T06:13:55.847Z",
+      "lifecycleCompleted": false,
+      "finalState": null,
+      "routeLengthM": null,
+      "settings": null,
+      "interrupted": true,
+      "uiFilesRemoved": true,
+      "auditedOwnedDirectories": 1,
+      "independentlyAbsentDirectories": 1,
+      "privateEvidenceSha256": {
+        "summary.json": "04cdf25cf0cc2ea696b69d9e39bb594e110410b998f0ae864251e2f677d82e58",
+        "commands.jsonl": "83c170fd46f8bd1bb8c11ed6e72c9c52184ae095d0d9467a2835cbd9a44cc6d8",
+        "remote-cleanup-audit.json": "c8f3a56deaf7f1c75133e35616d544f65d0a68d149f58047417051ade0449b5c"
+      }
+    },
+    {
+      "label": "locked-interrupted-route",
+      "startedAt": "2026-10-18T06:15:42.312Z",
+      "endedAt": "2026-10-18T06:18:44.771Z",
+      "lifecycleCompleted": false,
+      "finalState": "stopped",
+      "routeLengthM": 199.99365632892074,
+      "settings": {
+        "paceSecPerKm": 300,
+        "laps": 2,
+        "direction": "reverse",
+        "sampleIntervalMs": 1000
+      },
+      "interrupted": true,
+      "uiFilesRemoved": true,
+      "auditedOwnedDirectories": 2,
+      "independentlyAbsentDirectories": 2,
+      "privateEvidenceSha256": {
+        "summary.json": "dffcfdb35429a81b5d96828091f4155509e6e6a8fcf34e3205f5f491fbedcc3f",
+        "commands.jsonl": "6f8732d9d22f03dcf0c138ecf03fb84370596024d1b17af13efdb93938bfe3b7",
+        "session-0.jsonl": "65ad1c2625d21cdefe5603ac96ba1c20d1350906e4aba85f0998cbbb84dd3663",
+        "remote-cleanup-audit.json": "a84f8105d881e044ec0f110378e1cf262d0d5e4ee0d1a40e1c221f2cbe16bbff"
+      }
+    },
+    {
+      "label": "corrected-full-route",
+      "startedAt": "2026-10-18T06:21:18.716Z",
+      "endedAt": "2026-10-18T06:26:09.038Z",
+      "lifecycleCompleted": true,
+      "finalState": "stopped",
+      "routeLengthM": 199.9936563291514,
+      "settings": {
+        "paceSecPerKm": 300,
+        "laps": 2,
+        "direction": "reverse",
+        "sampleIntervalMs": 1000
+      },
+      "interrupted": false,
+      "uiFilesRemoved": true,
+      "auditedOwnedDirectories": 2,
+      "independentlyAbsentDirectories": 2,
+      "measurements": {
+        "independentSamples": 54,
+        "matchedSubmittedSamples": 54,
+        "maxNearestSubmittedErrorM": 0.0005496459214319408,
+        "reverseDirectionBackstepsOver1M": 0,
+        "observedForwardProgressM": 398.6805956725319,
+        "observedEndDistanceFromStartM": 0.00020996484590763502,
+        "endWindowMockSamples": [
+          {
+            "relativeToDisableStartMs": -1162,
+            "distanceFromStartM": 0.00020996484590763502
+          }
+        ],
+        "measuredMeanPaceSecPerKm": 308.5176488023252,
+        "pause": {
+          "heldElapsedUnchanged": true,
+          "heldDistanceUnchanged": true,
+          "independentSamples": 17,
+          "maxDistanceFromHeldPositionM": 0.0003871325717525598
+        },
+        "terminalSample": {
+          "elapsedMs": 119996.19379749084,
+          "speedMps": 0,
+          "distanceFromStartM": 0
+        },
+        "controllerFinalState": "stopped",
+        "terminalConfirmations": [
+          {
+            "confirmed": true,
+            "distanceM": 0.00020996484590763502
+          }
+        ],
+        "recoveryEvents": [
+          {
+            "confirmed": true,
+            "samples": 3
+          }
+        ],
+        "effectiveSubmittedSamples": 52,
+        "rawUniqueReaderSamples": 109,
+        "note": "Nearest submitted error is digital coordinate agreement. Mean pace uses independently projected reverse rectangle progress and device callback time; not native speed."
+      },
+      "privateEvidenceSha256": {
+        "summary.json": "29ac9f28ccbc571ffb356c296338003b112719b8e7e4bdfecd4ef53ec6a1051d",
+        "commands.jsonl": "22893f6afa68201fa5037607ed203aeba80778989d4f722575d1ecffa3c7952a",
+        "session-0.jsonl": "e147bab81e91ed16d678dea070d3bff8cebf7222eda168e8bbc2afcc90323c12",
+        "remote-cleanup-audit.json": "0b156d3d4377aaa43f94c5a2b5439f88647c0421bc2ac4e240a20fa75edc9a75",
+        "analysis.json": "6bb136a4b769b9d2e62cb44f8a23d5e34d1d09b15c1c7031f49b2fc319668d7b"
+      }
+    },
+    {
+      "label": "unplanned-disconnect-before-session-baseline",
+      "startedAt": "2026-10-18T06:26:44.386Z",
+      "endedAt": "2026-10-18T06:27:10.722Z",
+      "lifecycleCompleted": false,
+      "finalState": "recovery_required",
+      "routeLengthM": 199.9936563291514,
+      "settings": {
+        "paceSecPerKm": 300,
+        "laps": 2,
+        "direction": "reverse",
+        "sampleIntervalMs": 1000
+      },
+      "interrupted": true,
+      "uiFilesRemoved": false,
+      "auditedOwnedDirectories": 1,
+      "independentlyAbsentDirectories": 1,
+      "privateEvidenceSha256": {
+        "summary.json": "487e4013d210726d60d3d864cd4c87d953f53e063f151299152a3e6401fef51c",
+        "commands.jsonl": "599c9312289dc4d7ae03823f80c5f2ced4111f5e393d4c1ecd6e45ed9b128e31",
+        "session-0.jsonl": "df929a06fb0f1a53776c97a88c0ed6483a45bc23b7bf32d987d1675adddeb9ac",
+        "remote-cleanup-audit.json": "765681341ac5b838a68feb85020a54969e3c46543f1f70336b898bf492ceb9fe"
+      }
+    },
+    {
+      "label": "physical-usb-gap-reconnect",
+      "startedAt": "2026-10-18T06:29:30.740Z",
+      "endedAt": "2026-10-18T06:32:11.833Z",
+      "lifecycleCompleted": true,
+      "finalState": "stopped",
+      "routeLengthM": 199.99365632158975,
+      "settings": {
+        "paceSecPerKm": 300,
+        "laps": 2,
+        "direction": "reverse",
+        "sampleIntervalMs": 1000
+      },
+      "interrupted": false,
+      "uiFilesRemoved": true,
+      "auditedOwnedDirectories": 2,
+      "independentlyAbsentDirectories": 2,
+      "measurements": {
+        "physicalDisconnectMs": 37987,
+        "innerWindowGuardMs": 1000,
+        "independentGapSamples": 0,
+        "gapMaxDistanceFromLastSubmittedM": null,
+        "afterReconnectState": "recovery_required",
+        "stopAfterReconnectState": "recovery_required",
+        "finalState": "stopped",
+        "originalBaselineRecovery": true,
+        "cleanup": true,
+        "interpretation": "Gap callbacks, if any, are observed phone positions; no further desktop route advance is possible while USB is absent. No standalone claim."
+      },
+      "privateEvidenceSha256": {
+        "summary.json": "3d454b9c33c87a424feaf55f7438a50fa6baa5abe5ecb5a22398c4f332e20fb6",
+        "commands.jsonl": "1b5e9d6c098fa46c3dece3e46ae6aa2b500562da2222f30b35dc690d3e6d39b7",
+        "session-0.jsonl": "ae7edac1949e4963d140239b84d73469e346c2a22da20192b6e4258aa56f73b8",
+        "remote-cleanup-audit.json": "41108678d115a99ee0bf0f99ec1e4091d149d3da230e0ce065212d613d3b45d5",
+        "gap-analysis.json": "40d877ca3d900a9675a535070d07314465c6596ea38f28c0bded28eeb6024d11"
+      }
+    },
+    {
+      "label": "actual-process-SIGINT-exit-not-restored",
+      "startedAt": "2026-10-18T06:34:09.254Z",
+      "endedAt": "2026-10-18T06:40:09.010Z",
+      "lifecycleCompleted": false,
+      "finalState": "stopping",
+      "routeLengthM": null,
+      "settings": null,
+      "exitTrigger": "SIGINT",
+      "observedProcessExitCode": 1,
+      "cleanupResultSupersededByIndependentAudit": true,
+      "interrupted": false,
+      "uiFilesRemoved": true,
+      "auditedOwnedDirectories": 2,
+      "independentlyAbsentDirectories": 2,
+      "privateEvidenceSha256": {
+        "summary.json": "308eb1c8ef221a26b1cdc42779ec0a5a1fc4c2e6e6ace217a71b7693e315a342",
+        "commands.jsonl": "e49e866eabeccfc292855f73ef29b114318fc8f1d051d447e9716bf25c1db0c6",
+        "session-0.jsonl": "dba5c4d6e1de76fbec1ae0d3d33822d6a8cba0dfd54cbe78790fa925aa59a3aa",
+        "remote-cleanup-audit.json": "1fadc6769d370c4dc5839167d0dc4f221633e1f2638a77e3b10d0020e91c4189"
+      }
+    }
+  ],
+  "followupRestoration": {
+    "forRun": "unplanned-disconnect-before-session-baseline",
+    "nativeDisableAccepted": true,
+    "baselineSource": "saved-preflight-no-session-baseline",
+    "recoveryConfirmed": true,
+    "samples": 3,
+    "maxBaselineDistanceM": 3.150653773859013,
+    "cleanupErrors": 0,
+    "uiFilesRemoved": true,
+    "privateSummarySha256": "a41379d8702d8493bfd7554b69e8888a6e940074a22516f5b5046c11960e3976"
+  },
+  "processExit": {
+    "automaticRestorationConfirmed": false,
+    "reportedStateAt60SecondExit": "stopping",
+    "originalPidSubsequentlyAbsent": true,
+    "manualFollowup": {
+      "baselineSource": "original-session-journal",
+      "nativeDisableAccepted": true,
+      "confirmed": true,
+      "samples": 3,
+      "maxBaselineDistanceM": 22.593528179584023,
+      "privateSummarySha256": "ca93e7307fabee9a23a45fe4f178828245054d5deab06c73ace18dd6d4568cc7"
+    },
+    "orphanCleanup": {
+      "zeroByteUiDumpRemovedAfterOriginalCommandPathAndEmptyDigestCheck": true,
+      "originalOwnedDirectoriesFinallyAbsent": 2,
+      "ownedLocalEmptyTempDirectoryRemoved": true,
+      "privateSummarySha256": "6888551300e202a3bb04a9842ac3471bdf292c7cbd6e5a7c3568bfbb0c4c1207"
+    },
+    "abruptKillAndPowerLossTested": false
+  },
+  "targetApp": {
+    "bundleName": "com.zjwh.hm_wh_physicalfitness",
+    "version": "7.3.92",
+    "evidenceSource": "user_operated_and_reported_UI_not_internal_API",
+    "testLocationUi": "定位失败",
+    "normalLocationControl": "正常定位成功",
+    "classification": "test_location_not_observed_compatibility_not_accepted",
+    "track": "unverified",
+    "finalExerciseRecord": "unverified",
+    "agentSubmittedExerciseRecord": false
+  },
+  "finalPhoneState": {
+    "explicitDisableAccepted": true,
+    "originalSessionBaselineFollowupConfirmed": true,
+    "normalTargetAppLocationUserConfirmed": true,
+    "activeTestSession": false
+  },
+  "historicalFailuresPreserved": [
+    "M0_gap_original_baseline_107m",
+    "Task5_original_baseline_51.027_to_84.207m"
+  ],
+  "privacy": {
+    "rawCoordinatesIncluded": false,
+    "credentialsIncluded": false,
+    "rawEvidenceRetainedLocally": true
+  }
+}
