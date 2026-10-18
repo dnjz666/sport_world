@@ -43,4 +43,4 @@
 
 任务 5 的原基线 51.027–84.207 米恢复失败继续保留；另一次新基线 USB 复核通过不覆盖该失败，见[任务 5 报告](task5-verified-executor.md)。本任务只验证会话与日志逻辑，没有新增当前手机恢复结论。脱机仍未证实，verifiedStandalone 保持 false，运动世界兼容性仍待验证。
 
-下一项是任务 7 的回环控制服务、入口调度和界面，包括在 recovery_required 期间继续 tick、呈现三类位置及恢复结果，并安排进程退出时的停止尝试。完整路线及 USB／进程异常的实际设备验收留待任务 8。当前 npm start 尚无服务入口；模块使用见[桌面说明](../../desktop/README.md)。
+后续任务 7 已接入回环控制服务、入口调度和界面，包括在 recovery_required 期间继续 tick、呈现三类位置及恢复结果，并安排进程退出时的停止尝试。任务 6 已按用户要求合并 main；npm start 现在可用，见[任务 7 报告](task7-local-control.md)。完整路线及 USB／进程异常的实际设备验收仍留待任务 8；模块使用见[桌面说明](../../desktop/README.md)。

@@ -10,7 +10,7 @@
 
 **Spec:** [已通过的设计规范](../specs/2026-10-16-harmonyos-track-location-design.md)。执行者必须先读规范和本计划。
 
-状态：用户已选择本会话逐步执行。2026-10-18 接续：普通读取应用签名、安装授权和实际回调已验证；testhelper GPX 两固定点、短序列与有线停止恢复通过，USB G0–G2 通过。物理拔线约16秒无有效回调，原基线恢复存在未解释107米偏差，另一次新稳定基线USB启停复核通过；脱机仍未证实。任务2及任务3–6完成，任务5已合并main；任务6只完成会话／日志逻辑测试，未新增设备结论。任务7–9尚未开始，运动世界定位兼容性未测试。详见 [M0 结果](../../verification/m0-results.md)。
+状态：用户已选择本会话逐步执行。2026-10-18 接续：USB G0–G2 通过，任务2及任务3–7完成。任务6已合并main，任务7按用户更新直接在main完成本地服务／界面与107项测试；只读核实真实设备列表，未新增模拟／恢复实测。M0物理拔线约16秒无有效回调，原基线107米偏差及任务5原基线约51米偏差仍保留，各自的新基线独立USB复核通过不能覆盖失败。任务8–9尚未开始，脱机及运动世界定位兼容性未验证。详见 [M0 结果](../../verification/m0-results.md)。
 
 ## Global Constraints
 
@@ -25,7 +25,7 @@
 - G0、G1、G2 未通过，不执行完整产品任务 3–9；缺少授权或设备时报告待验证，不能假定支持或直接宣布不可行。
 - 电脑界面移动、接口返回成功、模拟器成功都不能代替目标真机的独立读取结果。
 - 本地控制服务只绑定 `127.0.0.1`；不把界面输入拼接为任意 shell 命令。
-- 规划时目录只有文档且不是 Git 仓库；M0 后已创建本地首次提交。任务3–4曾在独立工作树实现并锁定桌面依赖；完整轨迹执行和控制服务尚未实现，远端由用户自行上传。2026-10-17 用户更新工作方式：后续任务在当前目录从 main 新建 codex/ 开发分支，不再单独创建隔离工作树，除非用户另有明确要求。
+- 规划时目录只有文档且不是 Git 仓库；M0 后已创建本地首次提交。任务3–4曾在独立工作树实现并锁定桌面依赖，任务7已接入本地控制服务，远端由用户自行上传。2026-10-18用户更新工作方式：任务6合并后，后续直接在当前目录的main分支实现、验证和提交，不新建开发分支或工作树；此要求覆盖2026-10-17的开发分支安排。
 
 ## Review Focus
 
@@ -221,14 +221,18 @@
 
 **Interfaces:** `createControlServer(controller: SessionController, hdc: HdcClient): Promise<{ url: string, close(): Promise<void> }>`，绑定 `127.0.0.1`。API 为 `GET /api/state`、`GET /api/targets`、`POST /api/session`；POST 使用任务 6 的指令数据，错误响应为 `{ code: string, message: string }`。
 
-- [ ] 写失败测试：`bad_json_is_rejected` 返回 400 且会话不启动；`unsupported_capability_cannot_start` 返回明确能力错误；`unselected_target_cannot_start` 不隐式选择手机（RF1、RF2）。
-- [ ] 固定损坏请求断言 `assert.equal(response.status, 400)`，并与请求前快照比较，断言 `state` 和 `sessionId` 均未改变。
-- [ ] 写失败测试 `foreign_origin_refused`：拒绝来自其他网页来源的控制请求，不开放任意来源 CORS；只接受明确的 JSON 指令，不能把请求内容当 shell 文本。
-- [ ] 运行 `npm run build`、`node --test desktop/tests/server.test.mjs`，确认失败后实现服务与入口。启动端口由系统分配并在本机输出 URL，避免与其他服务冲突。
-- [ ] 启动入口使用 `HDC_PATH` 指定实际工具路径，`M0_REPORT_PATH` 默认指向项目的 `docs/verification/m0-report.json`；会话日志默认保存到 `local-data/sessions/` 并在 `.gitignore` 排除。缺少报告时呈现能力未确认，不能直接开始模拟。
-- [ ] 实现设备选择、路线点编辑与形状预览、配速／圈数／方向、开始／暂停／继续／停止。状态区分别呈现预期、已提交、独立读取和恢复结果。
-- [ ] 构建后运行 `npm start`。人工验证一个有效路线，以及损坏输入、权限未验证、设备掉线、清理失败等界面路径；错误必须保留输入并指出可修正项。
-- [ ] 重跑本任务测试及全部 `npm test`，要求零失败；若已有 Git，提交本任务文件。
+实施补充：启动装配导出createApplication，其close负责停止及独立恢复等待；createControlServer.close只关闭HTTP／调度。页面绑定已应用配置sessionId并携带可选X-Session-Id，服务端派发前复查；stop不受旧标识阻止。每次会话结束需重新应用配置，避免跨页面显示旧路线却启动新配置。
+
+- [x] 写失败测试：`bad_json_is_rejected` 返回 400 且会话不启动；`unsupported_capability_cannot_start` 返回明确能力错误；`unselected_target_cannot_start` 不隐式选择手机（RF1、RF2）。
+- [x] 固定损坏请求断言 `assert.equal(response.status, 400)`，并与请求前快照比较，断言 `state` 和 `sessionId` 均未改变。
+- [x] 写失败测试 `foreign_origin_refused`：拒绝来自其他网页来源的控制请求，不开放任意来源 CORS；只接受明确的 JSON 指令，不能把请求内容当 shell 文本。
+- [x] 运行 `npm run build`、`node --test desktop/tests/server.test.mjs`，确认失败后实现服务与入口。启动端口由系统分配并在本机输出 URL，避免与其他服务冲突。
+- [x] 启动入口使用 `HDC_PATH` 指定实际工具路径，`M0_REPORT_PATH` 默认指向项目的 `docs/verification/m0-report.json`；会话日志默认保存到 `local-data/sessions/` 并在 `.gitignore` 排除。缺少报告时呈现能力未确认，不能直接开始模拟。
+- [x] 实现设备选择、路线点编辑与形状预览、配速／圈数／方向、开始／暂停／继续／停止。状态区分别呈现预期、已提交、独立读取和恢复结果。
+- [x] 构建后运行 `npm start`。人工验证一个有效路线，以及损坏输入、权限未验证、设备掉线、清理失败等界面路径；错误必须保留输入并指出可修正项。
+- [x] 重跑本任务测试及全部 `npm test`，要求零失败；若已有 Git，提交本任务文件。
+
+实际验收（2026-10-18）：严格构建、页面JS语法检查及107项全量测试通过，新增10项HTTP、5项装配／退出及7项界面状态测试。实际npm start及真实设备列表只读核实；合成native浏览器验证有效路线、控制、损坏输入、能力未确认、掉线、清理失败／重试、跨页面替换和服务断线。审查两项P2先失败后修复，原基线恢复约束未改；未开启真实手机模拟，验收进程／页面已关闭。详见[任务7报告](../../verification/task7-local-control.md)。下一项任务8真机验收。
 
 ### Task 8：完成 USB 真机与运动世界兼容性验收（M1／M2）
 

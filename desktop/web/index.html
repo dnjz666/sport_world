@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TRACK · 本地轨迹控制台</title><link rel="stylesheet" href="/styles.css"><script src="/app.js" type="module"></script></head>
+<body>
+<header class="topbar"><a class="brand" href="/"><span class="brand-mark">T</span> TRACK <span class="brand-caption">本地轨迹控制台</span></a><span class="local-tag"><span class="dot"></span> 本地 USB 会话</span></header>
+<main>
+  <div class="page-heading"><div><p class="eyebrow">ROUTE WORKSPACE / 01</p><h1>让每一圈，按计划推进。</h1><p class="subtitle">配置闭合路线，在独立读取中核对每次输出。</p></div><div class="heading-note">WGS-84 坐标<br><span>持续 USB 连接 · 前台独立读取</span></div></div>
+  <div id="error" class="notice error" role="alert" hidden></div>
+  <div class="workspace">
+    <section class="panel configuration" aria-labelledby="config-heading">
+      <div class="panel-heading"><h2 id="config-heading">会话配置</h2><span class="step-number">01</span></div>
+      <form id="config-form" novalidate>
+        <fieldset id="configuration-fields">
+          <label for="target">USB 设备</label><div class="device-row"><select id="target" required><option value="">请选择设备</option></select><button type="button" id="refresh-targets" class="icon-button" aria-label="刷新设备">↻</button></div><p id="device-note" class="field-note">不会自动选择或切换手机。</p>
+          <label for="route-name">路线名称</label><input id="route-name" placeholder="例如：操场外圈" maxlength="120" required>
+          <div class="label-row"><label for="points">路线点位</label><span>纬度, 经度 · 每行一点</span></div>
+          <textarea id="points" rows="6" spellcheck="false" placeholder="填写至少三个 WGS-84 坐标点&#10;末尾会自动连接到起点" required></textarea>
+          <div class="editor-tools"><button type="button" id="preview-route" class="text-button">更新预览</button><label class="file-label" for="route-file">导入路线 JSON<input id="route-file" type="file" accept=".json,application/json"></label></div>
+          <div class="field-grid"><div><label for="pace">配速 <span>秒 / 公里</span></label><input id="pace" type="number" value="300" min="1" step="1" required></div><div><label for="laps">圈数</label><input id="laps" type="number" value="2" min="1" step="1" required></div></div>
+          <label for="direction">运行方向</label><select id="direction"><option value="forward">正向 · 按点位顺序</option><option value="reverse">反向 · 逆点位顺序</option></select>
+          <button type="submit" id="configure" class="button secondary full">应用配置</button>
+        </fieldset>
+      </form>
+      <p id="config-note" class="field-note">开始前先应用配置。修改后需重新应用。</p>
+    </section>
+    <div class="main-column">
+      <section class="panel route-panel" aria-labelledby="route-heading">
+        <div class="panel-heading"><h2 id="route-heading">路线预览</h2><span class="small-badge">WGS-84</span></div>
+        <div class="route-stage"><svg id="route-preview" viewBox="0 0 720 300" role="img" aria-label="闭合路线形状预览"></svg><div id="route-empty" class="empty-state"><span class="empty-icon">⌖</span><strong>从一条路线开始</strong><span>输入点位后，查看闭合形状与预计距离</span></div><span class="preview-note">形状预览 · 无底图</span></div>
+        <div class="route-stats"><div><span>单圈距离</span><strong id="route-length">—</strong></div><div><span>目标总距离</span><strong id="total-length">—</strong></div><div><span>预计用时</span><strong id="estimated-time">—</strong></div><div><span>路线点</span><strong id="point-count">—</strong></div></div>
+      </section>
+      <section class="panel session-panel" aria-labelledby="session-heading">
+        <div class="panel-heading"><h2 id="session-heading">运行会话</h2><span id="state" class="state-badge" data-state="unknown">连接服务中</span></div>
+        <p id="state-note" class="session-note" aria-live="polite">正在读取本地服务状态。</p>
+        <div class="session-metrics"><div><span>经过时间</span><strong id="elapsed">00:00</strong></div><div><span>累计距离</span><strong id="distance">0 <small>m</small></strong></div><div><span>当前圈数</span><strong id="lap">—</strong></div></div>
+        <div class="session-actions"><button id="start" class="button primary" disabled>开始运行 <span>↗</span></button><button id="pause" class="button secondary" disabled>暂停</button><button id="resume" class="button secondary" disabled>继续</button><button id="stop" class="button stop" disabled>停止并核对恢复</button></div>
+        <p class="session-id">SESSION <span id="session-id">尚未建立</span></p>
+      </section>
+    </div>
+  </div>
+  <section class="panel observations" aria-labelledby="observations-heading"><div class="panel-heading"><h2 id="observations-heading">位置核对</h2><span class="field-note">执行回执与独立读取分别记录</span></div><div class="position-grid"><article><h3><span class="legend expected"></span>预期位置</h3><div id="expected" class="position-value">等待轨迹样本</div></article><article><h3><span class="legend sent"></span>已提交位置</h3><div id="sent" class="position-value">等待执行回执</div></article><article><h3><span class="legend observed"></span>独立读取位置</h3><div id="observed" class="position-value">等待独立应用回调</div></article></div><div class="recovery-row"><span class="recovery-label">恢复判定</span><p id="recovery-result" aria-live="polite">尚未进行停止恢复核对。</p></div></section>
+  <footer>TRACK / LOCAL CONTROL <span>独立读取是验证依据。完整路线与目标应用兼容性仍需真机验收。</span></footer>
+</main>
+</body></html>
