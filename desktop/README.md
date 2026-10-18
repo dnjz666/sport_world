@@ -1,6 +1,6 @@
-# 桌面基础库与轨迹引擎（任务 3–4）
+# 桌面基础、轨迹引擎与会话控制（任务 3–6）
 
-当前提供 TypeScript 基础模块及时间驱动轨迹引擎，尚无控制界面或定位写入适配器。
+当前提供 TypeScript 基础模块、时间驱动轨迹引擎、已验证的 USB 定位执行器、独立读取通道及会话控制／日志；本地服务和控制界面待任务 7。
 
 ## 构建与测试
 
@@ -14,7 +14,7 @@ npm run build
 npm test
 ```
 
-已从 npm 生成的锁文件离线重新安装，并实际通过任务 3 的 26 个测试；任务 4 接入后全量 40 个测试通过。node_modules 和 dist 均不提交；测试不连接手机。npm start 的服务入口在任务 7 实现后才可用。
+任务 3 已从锁文件离线重新安装依赖；任务 6 接入后全量 85 个测试通过。node_modules 和 dist 均不提交；npm test 不连接手机。npm start 的服务入口在任务 7 实现后才可用。
 
 npm test 仅发现 desktop/tests/*.test.mjs，避免将本机 tools 目录中 SDK 自带的测试作为项目测试运行。新增桌面测试沿用该目录和命名约定。
 
@@ -31,6 +31,11 @@ npm test 仅发现 desktop/tests/*.test.mjs，避免将本机 tools 目录中 SD
 | [replay.ts](src/core/replay.ts) | 注入单调时钟的配速、暂停与继续、正反向圈数和单次终点样本 |
 | [geo.ts](src/core/geo.ts) | 半径 6371008.8 米的球面距离、短弧插值和当前位置朝向 |
 | [capabilities.ts](src/probe/capabilities.ts) | 对照保存的报告、目标／系统、G0–G2、期限及实际证据文件，条件缺失则禁用能力 |
+| [contract.ts](src/executor/contract.ts) | LocationExecutor、PositionObserver、SendReceipt 和 StopReceipt 跨任务接口 |
+| [verified-executor.ts](src/executor/verified-executor.ts) | 已验证 testhelper 的单点 GPX 传输、摘要检查、启用／设置／关闭及自有文件清理 |
+| [observer.ts](src/executor/observer.ts) | 从当前独立读取应用 PID 的 M0Reader HiLog 获取真实回调，过滤过期和旧进程样本 |
+| [session.ts](src/core/session.ts) | 配置快照、开始／暂停／继续／停止、连接代次、独立基线与恢复判定 |
+| [journal.ts](src/logging/journal.ts) | 串行 JSONL 事件、凭据过滤、输入快照及可见的写入错误 |
 
 ## 输入约定
 
@@ -40,9 +45,28 @@ parseRoute 接受 JSON 文本或对象；compileRoute 也自行校验并复制�
 
 capabilitiesFromReport 的 proofPath 指向保存的 ProbeReport JSON，报告内容须与传入对象一致。evidencePaths 中的相对路径从当前仓库工作目录解析，绝对路径可直接使用。外部目录启动时须设定正确工作目录或提供绝对证据路径。该检查用于防止误用缺失、过期或错误设备的报告，不把本地 JSON 当作签名授权机制；实际连接仍通过 HdcClient 独立核实。
 
-Task 3 只提供 HDC 设备查询和通用进程边界；任务 5 会在已验证适配器中补充显式目标命令调用、固定远端命令和参数校验。不能将任意界面文本拼成 hdc shell 命令。
+HdcClient.runTarget(targetId, args, options) 每次先核对显式 USB 目标，再保留独立 -t 参数执行非交互 shell／file 命令。options.signal 同时覆盖 USB 查询和命令；options.beforeRun 是 USB 查询后、实际派发前执行的同步守卫，由执行器复查授权。适配器使用固定远端命令、随机专属路径与校验后的参数；不能将任意界面文本拼成 hdc shell 命令。
 
 验证范围及限制见[任务 3 报告](../docs/verification/task3-desktop-foundation.md)和[任务 4 报告](../docs/verification/task4-time-driven-replay.md)。
+
+## 已验证定位执行与独立读取
+
+createVerifiedExecutor(capabilities, hdc, observer) 返回串行执行器。prepare 接受 sessionId、显式 targetId 和 usb 模式，核对本机保存的真实能力报告、当前系统构建及期限，建立读取通道并启用模拟。仅初始状态或成功清理后可 prepare；重新准备会重置序号并使用新的专属目录。当前适配器拒绝 standalone，即使传入自称支持脱机的标志也不走未验证路径。
+
+send 校验 Sample 并生成一个 WGS-84 GPX 点，以明确的绝对本机路径和完整远端文件路径传输，核对 SHA-256 后调用 testhelper set-mocked-locations，间隔参数固定为已验证的 1 秒。GPX 包含坐标和时间；不声称写入原生速度或朝向，调用耗时也不保证 1 Hz。序号须递增，失败后必须先成功 stop 才能重新 prepare。
+
+prepare／send／stop 串行执行。调用方应在 finally 中 stop；stop 在授权过期后仍可清理已有会话的同一目标，关闭成功后只删除本实例路径且摘要一致的 GPX，最后删除空目录。新实例先核对有效证据与系统也可 stop，供控制器在采基线前关闭残留；重复 stop 会重新发出关闭命令。不返回“正常定位已恢复”，恢复由控制器对照停止后的独立样本判断。停止失败可重试；文件摘要不一致则保留并返回失败。
+
+createPositionObserver(hdc, targetId).latest() 使用设备时间和当前读取应用 PID，查询 hilog -x -T M0Reader -P <pid>。首次轮询、读取进程重启或连接失败后重建新鲜度边界；缺少回调、回调过期或进程未运行返回 null，命令失败会抛错。来源和模拟标记不可读时保留 null。手机须运行已安装的独立读取应用，手动授权并保持前台亮屏。
+
+真实复验需要持续 USB，且会修改系统测试定位。确认本机能力证据、签名与目标正确，解锁并打开读取页后，在仓库根目录显式运行：
+
+```powershell
+npm run build
+node desktop/scripts/verify-executor-device.mjs --run-device-check
+```
+
+[复验脚本](scripts/verify-executor-device.mjs) 先关闭残留模拟并建立新基线，再测试两个点，在 finally 中停止，独立检查恢复并按摘要清理本次远端文件。原始命令、位置与 UI 证据保存到忽略的 local-data；不要公开这些文件。结果与限制见[任务 5 报告](../docs/verification/task5-verified-executor.md)。
 
 ## 轨迹引擎
 
@@ -51,3 +75,15 @@ Task 3 只提供 HDC 设备查询和通用进程边界；任务 5 会在已验�
 pause 后 next 固定最后发出的坐标、朝向与 elapsedMs，更新 epochMs 且 speedMps 为零；resume 排除暂停时长，保留暂停前尚未采样的运行时间。首次采样前暂停时使用起点和零 elapsedMs。目标时长已到但终点未发出时，暂停仍固定最后样本，恢复后再发终点。重复 pause／resume 不改变进度，重复 start 或未启动采样会拒绝。
 
 finished() 在唯一终点样本发出之后才返回 true，可使用“检查 finished → next”的调度方式。终点 elapsedMs 钳至目标时长、速度为零、位置回到起点；完成后 next／pause／resume 会拒绝。完成清理定位由后续会话控制器负责，再次运行需新建 Replay。
+
+## 会话与日志
+
+SessionController 构造参数沿用计划：replayFactory、executor、observer、journal、clock、hdc 和 capabilities。dispatch 接受 configure／start／pause／resume／stop；snapshot 返回深复制的 SessionSnapshot，分别保留 expected、sent（含回执）和 observed。configure 必须显式指定与能力一致的 USB 目标；活动会话的配置不可修改。
+
+start 先核对能力、当前系统并主动 stop，再使用设备时间采集 5 个新的稳定基线回调（距中位点均不超过 10 米、精度不超过 50 米、未明确标记模拟），35 秒仍不足则报错且不 prepare。基线取得后才启用模拟。控制器本身不创建定时器；调用方在 running／paused／recovery_required 持续调用 tick，同代次并发调用合并。样本按 sampleIntervalMs 提交，调度延迟按实际经过时间计算当前位置。
+
+stop 立即使旧异步结果失效并进入 stopping，等待已开始的准备操作后清理。清理被接受后仍为 recovery_required；45 秒内至少 3 个不同的新回调须同时满足：在本次清理的设备时间边界之后、时间差不超过 5 秒、精度不超过 50 米、距原基线不超过 50 米、距所有尝试注入位置至少 100 米、未明确标记模拟，才进入 stopped。source／isMock 缺失仍保留 null，不能单凭 null 判正常。真实基线与路线过近时会保守地无法确认恢复。
+
+断线、清理失败、错误位置、旧样本或超时都保留待恢复；断线重连后必须重新 stop，不能凭旧关闭回执确认恢复。显式重试 stop 会重建清理时间边界和 45 秒窗口，沿用原会话基线，未确认前禁止重新 configure／start。授权过期不阻止已有会话清理。完整服务的进程退出处理及真机异常场景留待任务 7–8。
+
+createJournal(path) 将事件按调用顺序追加为 UTF-8 JSONL；请使用忽略的 local-data/sessions/ 下的路径。日志保存预期、提交回执、独立读取、原基线、清理、恢复边界／判据及错误；敏感字段、原生错误文本中的常见凭据赋值和私钥文本会被过滤。日志含精确坐标和目标标识，应留在本机。写入失败会暴露 JOURNAL_WRITE_FAILED，控制器仍尝试停止，修复日志后须重新建立控制器。恢复日志不能伪造补写。验收见[任务 6 报告](../docs/verification/task6-session-journal.md)。

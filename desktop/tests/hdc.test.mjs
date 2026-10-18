@@ -68,3 +68,43 @@ test('abort_stops_the_child', { timeout: 5000 }, async () => {
   const running = runProcess(process.execPath, ['-e', 'setInterval(()=>{},1000)'], { signal: abort.signal });
   abort.abort(); await assert.rejects(() => running, { name: 'AbortError' });
 });
+
+test('target_command_rechecks_usb_and_keeps_explicit_target_argument', async () => {
+  const calls = [];
+  let connected = true;
+  const client = new HdcClient({ executable: 'hdc.exe', run: async (_exe, args) => {
+    calls.push([...args]);
+    return args[2] === 'list' ? result(connected ? listing : 'phone-a USB Connected localhost hdc') : result('native out', 9, 'native err');
+  } });
+  assert.deepEqual(await client.runTarget('phone-b', ['shell', 'testhelper', 'help']), result('native out', 9, 'native err'));
+  assert.deepEqual(calls[1], ['-s', '127.0.0.1:8710', '-t', 'phone-b', 'shell', 'testhelper', 'help']);
+  connected = false;
+  await assert.rejects(() => client.runTarget('phone-b', ['shell', 'testhelper', 'help']));
+  assert.equal(calls.length, 3);
+});
+
+test('target_command_rejects_interactive_or_option_override_calls', async () => {
+  const client = clientWith(result(listing));
+  for (const args of [[], ['shell'], ['-t', 'phone-a'], ['shell', 'bad\ncommand']]) {
+    await assert.rejects(() => client.runTarget('phone-b', args));
+  }
+});
+
+test('target_command_abort_also_cancels_the_preflight_usb_query', async () => {
+  const abort = new AbortController();
+  let release;
+  const client = new HdcClient({ executable: 'hdc.exe', run: async (_exe, args, options) => {
+    if (args[2] !== 'list') return result('native command must not run');
+    return new Promise((resolve, reject) => {
+      release = () => resolve(result(listing));
+      options.signal?.addEventListener('abort', () => reject(Object.assign(new Error('cancelled'), { name: 'AbortError' })), { once: true });
+    });
+  } });
+  const running = client.runTarget('phone-b', ['shell', 'testhelper', 'help'], { signal: abort.signal })
+    .then(() => 'resolved', (error) => error.name);
+  abort.abort();
+  try {
+    const outcome = await Promise.race([running, new Promise((resolve) => setTimeout(() => resolve('still pending'), 30))]);
+    assert.equal(outcome, 'AbortError');
+  } finally { release(); await running; }
+});

@@ -9,8 +9,8 @@ export class HdcClient {
     this.run = options.run;
   }
 
-  async listTargets(): Promise<string[]> {
-    const result = await this.run(this.executable, ['-s', '127.0.0.1:8710', 'list', 'targets', '-v'], {});
+  async listTargets(options: { signal?: AbortSignal } = {}): Promise<string[]> {
+    const result = await this.run(this.executable, ['-s', '127.0.0.1:8710', 'list', 'targets', '-v'], options);
     if (result.exitCode !== 0 || result.stderr.trim()) {
       throw new Error(`HDC 设备查询失败 (${result.exitCode}): ${result.stderr || result.stdout}`);
     }
@@ -29,8 +29,19 @@ export class HdcClient {
     return [...targets];
   }
 
-  async requireTarget(targetId: string): Promise<void> {
+  async requireTarget(targetId: string, options: { signal?: AbortSignal } = {}): Promise<void> {
     if (typeof targetId !== 'string' || !targetId.trim()) throw new Error('必须显式选择 USB 目标设备');
-    if (!(await this.listTargets()).includes(targetId)) throw new Error('所选 USB 目标未连接；不会自动切换设备');
+    if (!(await this.listTargets(options)).includes(targetId)) throw new Error('所选 USB 目标未连接；不会自动切换设备');
+  }
+
+  async runTarget(targetId: string, args: readonly string[], options: { signal?: AbortSignal; beforeRun?: () => void } = {}): ReturnType<typeof runProcess> {
+    if (!Array.isArray(args) || args.length < 2 || !['shell', 'file'].includes(args[0]!) ||
+      args.some((arg) => typeof arg !== 'string' || /[\0\r\n]/.test(arg))) {
+      throw new Error('HDC 目标命令必须为非交互的 shell 或 file 参数数组');
+    }
+    const { beforeRun, ...processOptions } = options;
+    await this.requireTarget(targetId, processOptions);
+    beforeRun?.();
+    return this.run(this.executable, ['-s', '127.0.0.1:8710', '-t', targetId, ...args], processOptions);
   }
 }

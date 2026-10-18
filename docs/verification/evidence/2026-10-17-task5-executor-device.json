@@ -1,0 +1,181 @@
+{
+  "recordedAt": "2026-10-17T15:15:55.382Z",
+  "status": "usb_adapter_verified_with_recovery_limitation",
+  "task5Complete": true,
+  "targetIdRedacted": true,
+  "systemBuild": "SGT-AL50 7.0.0.109(SP6C00E105R3P3)",
+  "verifiedStandalone": false,
+  "exerciseRecordStarted": false,
+  "automatedTests": {
+    "total": 60,
+    "passed": 60
+  },
+  "twoPointRecheck": {
+    "recordedAt": "2026-10-17T15:08:42.679Z",
+    "passed": false,
+    "targetIdRedacted": true,
+    "systemBuild": "SGT-AL50 7.0.0.109(SP6C00E105R3P3)",
+    "readerBundleName": "com.example.m0locationreader",
+    "mode": "usb",
+    "verifiedStandalone": false,
+    "exerciseRecordStarted": false,
+    "criteria": {
+      "baselineSamples": 5,
+      "baselineSpreadM": 10,
+      "maxAccuracyM": 50,
+      "injectionErrorM": 5,
+      "minPointSeparationM": 100,
+      "minimumInjectedSamples": 5,
+      "settleMs": 5000,
+      "minimumRecoverySamples": 3,
+      "recoveryRadiusM": 50,
+      "maxTimestampDeltaMs": 5000,
+      "minimumDistanceFromMockM": 100
+    },
+    "fixedPoints": [
+      {
+        "phase": "point-1",
+        "samples": 5,
+        "acceptedSubmissions": 6,
+        "maxErrorM": 0.00032583131068009434,
+        "passed": true
+      },
+      {
+        "phase": "point-2",
+        "samples": 5,
+        "acceptedSubmissions": 6,
+        "maxErrorM": 0.0003258278201218957,
+        "passed": true
+      }
+    ],
+    "recovery": {
+      "passed": false,
+      "samples": 0,
+      "maxDistanceFromBaselineM": null,
+      "latestTimestampDeltaMs": null,
+      "observedFreshSamples": 13,
+      "minDistanceFromBaselineM": 51.02743043315802,
+      "maxObservedDistanceFromBaselineM": 84.20670815923006,
+      "phoneStationaryReportedByUser": true,
+      "reason": "Fresh independent positions outside the predeclared 50 m baseline radius; cause undetermined; failure retained"
+    },
+    "cleanup": {
+      "stopReceipt": {
+        "accepted": true,
+        "errorCode": null
+      },
+      "uiFiles": 15,
+      "uiErrors": [],
+      "remoteDirectoriesAbsent": true,
+      "executorLocalTempAbsent": true,
+      "gpxFiles": 12
+    },
+    "testhelperVersion": "1.0.1",
+    "preflight": {
+      "mockDisableConfirmed": true,
+      "freshBaselineAfterDisable": true
+    },
+    "baseline": {
+      "samples": 5,
+      "spreadM": 0
+    },
+    "pointSeparationM": 133.4340962801746,
+    "evidence": {
+      "privateFolder": "local-data/task5-af1baad0ee9740ffba5caf3b48d64b86",
+      "sha256": {
+        "commands.jsonl": "c11f663451c16382bc8d76218b527649ceb5395edd01ed3e867fbfcd8c73194f",
+        "observations.jsonl": "d5e9292f0c95cc006fafd91012042747b2e83f0d9b1a7add5cf2f4bf24ace212",
+        "receipts.jsonl": "3fe361bf5faaf4fe0b2119e4b1315c04ef894839fb7c9b32177d8446a182012b",
+        "criteria-before-injection.json": "37362eaa5266b5d44231e9f262d4ae8f850773b962f9f09be93a7a42eb29c2ba",
+        "cleanup-absence.json": "e0d41a7d401fa2ebfa2388002110fc35f84392c231e336d29bae05d81779a291"
+      }
+    }
+  },
+  "separateUsbStopRecovery": {
+    "recordedAt": "2026-10-17T15:13:11.682Z",
+    "passed": true,
+    "targetIdRedacted": true,
+    "acceptanceScope": "separate-usb-stop-recovery",
+    "systemBuild": "SGT-AL50 7.0.0.109(SP6C00E105R3P3)",
+    "readerBundleName": "com.example.m0locationreader",
+    "mode": "usb",
+    "verifiedStandalone": false,
+    "exerciseRecordStarted": false,
+    "criteria": {
+      "baselineSamples": 5,
+      "baselineSpreadM": 10,
+      "maxAccuracyM": 50,
+      "injectionErrorM": 5,
+      "minPointSeparationM": 100,
+      "minimumInjectedSamples": 5,
+      "settleMs": 5000,
+      "minimumRecoverySamples": 3,
+      "recoveryRadiusM": 50,
+      "maxTimestampDeltaMs": 5000,
+      "minimumDistanceFromMockM": 100
+    },
+    "fixedPoints": [
+      {
+        "phase": "point-1",
+        "samples": 5,
+        "acceptedSubmissions": 6,
+        "maxErrorM": 0.0005825793234578209,
+        "passed": true
+      }
+    ],
+    "recovery": {
+      "passed": true,
+      "samples": 3,
+      "maxDistanceFromBaselineM": 0,
+      "latestTimestampDeltaMs": -244
+    },
+    "cleanup": {
+      "stopReceipt": {
+        "accepted": true,
+        "errorCode": null
+      },
+      "uiFiles": 7,
+      "uiErrors": [],
+      "remoteDirectoriesAbsent": true,
+      "executorLocalTempAbsent": true,
+      "gpxFiles": 6
+    },
+    "testhelperVersion": "1.0.1",
+    "preflight": {
+      "mockDisableConfirmed": true,
+      "freshBaselineAfterDisable": true
+    },
+    "baseline": {
+      "samples": 5,
+      "spreadM": 0
+    },
+    "pointSeparationM": 133.43409628088193,
+    "evidence": {
+      "privateFolder": "local-data/task5-d29470bb7b27413b8cf9d0a69d09c297",
+      "sha256": {
+        "commands.jsonl": "d9de0f88b5e0329ad7f899649785f65b4672d445a6c7b3fdbc3b6881f7703271",
+        "observations.jsonl": "38ac8b84c4b154be392302252a919e132b1d33c73ccfc87d9b5c24e896ea8bbe",
+        "receipts.jsonl": "0274bf888b94c2b10684e0e7a3597b351804c3704b8744d516dfa585f2f1b0be",
+        "criteria-before-injection.json": "c81047500aafea597c307442b936f6c9a5ad758cd85d334679280799860c96ad",
+        "cleanup-absence.json": "5364168157c6af1b9331aeec08f69dd9d5ea37f6fe953c4a1bd37d6c6b5281b4"
+      }
+    }
+  },
+  "initialDiagnostic": {
+    "privateFolder": "local-data/task5-27cbe8b6f10c4d2a9bdd1208b89fec1c",
+    "countedForFinalAcceptance": false,
+    "reason": "No explicit preflight disable in first diagnostic; final acceptance uses the two later runs"
+  },
+  "limits": [
+    "Full two-point run did not meet the original-baseline recovery criterion (51.027 to84.207 m)",
+    "Separate fresh-stable-baseline wired stop/recovery passed; it does not erase the earlier failure",
+    "Native speed/bearing setting, guaranteed1Hz, target-app record validity and standalone operation are not verified"
+  ],
+  "finalSourceSha256": {
+    "desktop/src/hdc/client.ts": "b25e53662f9167001de3359ef1c92080e4a34e6b82f8e0992ac7c2cb7794092f",
+    "desktop/src/executor/contract.ts": "25715a13b6dff377e7f2ad9bd797eb551f7a2dc7f54982844c36796e0d75d384",
+    "desktop/src/executor/verified-executor.ts": "912d8ca114626e1ce06b474898e4eca44bcb33b6b4455ae96746d2f59c479b86",
+    "desktop/src/executor/observer.ts": "b45117982d4d8d48ba05ef95f3f0dcfe9089f49f320ed1a087a7698c87af1d35",
+    "desktop/scripts/verify-executor-device.mjs": "8250145e2ee825e29e857dcb440edaa6fc9dd9deae217d9fc25edaf7812966ba"
+  }
+}
