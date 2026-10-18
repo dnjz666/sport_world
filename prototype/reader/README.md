@@ -32,7 +32,7 @@ Set-Location 'D:\code\sport_world\prototype\reader'
 & (Join-Path $taskIde 'tools\node\node.exe') (Join-Path $taskIde 'tools\hvigor\bin\hvigorw.js') --mode module -p product=default -p module=entry@default -p buildMode=debug assembleHap --no-daemon
 ```
 
-历史 1.0.0 签名产物为 73,456 字节，摘要在原 M0 证据中。1.1.0 初次真机诊断产物为 92,560 字节；审查修复取消订阅失败后的重启提示，重新签名的当前产物为 92,541 字节，仍位于 `entry/build/default/outputs/default/entry-default-signed.hap`。两个版本快照的源码和产物摘要分别保留本机，当前修复产物尚待安装。`build.ps1` 仍使用早期 tools/cli 的 API 24 工具，不能当成本轮 IDE API 26 命令；它只在本机配置缺失时复制模板，不覆盖签名配置。工程无外部依赖，hvigor.dependency.useNpm=true 使用随包插件。
+历史 1.0.0 签名产物为 73,456 字节，摘要在原 M0 证据中。1.1.0 初次真机诊断产物为 92,560 字节；审查修复取消订阅失败后的重启提示，重新签名的当前产物为 92,541 字节，仍位于 `entry/build/default/outputs/default/entry-default-signed.hap`，已再次安装成功。两个版本快照的源码和产物摘要分别保留本机。`build.ps1` 仍使用早期 tools/cli 的 API 24 工具，不能当成本轮 IDE API 26 命令；它只在本机配置缺失时复制模板，不覆盖签名配置。工程无外部依赖，hvigor.dependency.useNpm=true 使用随包插件。
 
 ## 真机读取与证据
 

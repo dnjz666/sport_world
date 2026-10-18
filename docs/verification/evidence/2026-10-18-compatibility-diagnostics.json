@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "recordedAt": "2026-10-18T12:06:58.698Z",
+  "recordedAt": "2026-10-18T12:12:38.995Z",
   "status": "in_progress_not_accepted",
   "device": {
     "model": "SGT-AL50",
@@ -146,7 +146,7 @@
     "finalSignedBuild": {
       "bytes": 92541,
       "sha256": "4f201df0cf8416f6e726c776b9d92a00e4c11ad9e7a44f3e21282df56b91ac56",
-      "lifecycleFixInstalled": false
+      "lifecycleFixInstalled": true
     }
   },
   "cleanupBenchmark": {
@@ -189,7 +189,7 @@
       "followupSamples": 3,
       "followupObservationElapsedMs": 55500,
       "ownedDirectoriesIndependentlyAbsent": 2,
-      "operatorObservation": "pending",
+      "operatorObservation": "Operator did not observe during the enabled window; target-app outcome unverified.",
       "harnessReturnAcknowledgedBeforeDeadline": false
     }
   ],
@@ -211,7 +211,7 @@
     "Historical M0 USB-gap original-baseline107m and Task5 original-baseline51m failures remain unchanged."
   ],
   "incomplete": [
-    "Continuous-GPX target-app operator result.",
+    "Repeat continuous-GPX target-app observation with readiness gate.",
     "Resolve target-app compatibility; native position receipt alone is not success.",
     "Complete process-exit recovery repeat.",
     "Surveyed sports-track route and track/record validity."
@@ -306,6 +306,16 @@
         "summary.json": "4072c5299e0a719292103763c0bad2d4ab179b091a9cbcd923f5fec398d5b38d",
         "native.jsonl": "75534171dddfc5b3c14d21692054c49d01fd4accb024e6d7f6ec71f69980b2f6",
         "target-callback-metadata.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      }
+    },
+    {
+      "label": "finalReaderInstall",
+      "privateDirectory": "local-data/task8-3d281bbbd8824d0d879a6f24b448b703",
+      "sha256": {
+        "summary.json": "fec3bdc7299e7c6e4d7569e362c2613db6403e1765f03e8c8f4bf7fcfa760317",
+        "commands.jsonl": "acf5f1cd3c27324c80434983639dff50893c3c777d5d31cad7d4b468706f233b",
+        "remote-cleanup-audit.json": "b0d5bf64001365f088d168cc57093558962d6266177882e2c549ff839fe23d69",
+        "reader-build.json": "8a0c908a30c644b8226c2ddf913453bd20f75481317784770fd1cfbcfbdd9b30"
       }
     }
   ]
